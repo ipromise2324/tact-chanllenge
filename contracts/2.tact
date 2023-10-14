@@ -26,8 +26,23 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Refund) {
+    if(context().sender == self.admin){
+      send(SendParameters{
+        to: msg.sender,
+        value: 0,
+        bounce: false,
+        mode: SendRemainingValue + SendIgnoreErrors
+      });
+    }
   }
 
   receive(msg: Slice) {
+    send(SendParameters{
+      to: self.admin,
+      value: 0,
+      bounce: false,
+      mode: SendRemainingValue + SendIgnoreErrors,
+      body: beginCell().storeAddress(context().sender).storeRef(msg.asCell()).endCell()
+    });
   }
 }
