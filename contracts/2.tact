@@ -29,9 +29,9 @@ contract Task2 with Deployable {
     if(context().sender == self.admin){
       send(SendParameters{
         to: msg.sender,
-        value: ton("1"),
+        value: 0,
         bounce: false,
-        mode: SendPayGasSeparately
+        mode: SendRemainingValue
       });
     } 
   }
@@ -39,9 +39,9 @@ contract Task2 with Deployable {
   receive(msg: Slice) {
     send(SendParameters{
       to: self.admin,
-      value: ton("1"),
+      value: 0,
       bounce: false,
-      mode: SendPayGasSeparately,
+      mode: SendRemainingValue,
       body: beginCell().storeAddress(context().sender).storeRef(msg.asCell()).endCell()
     });
   }
