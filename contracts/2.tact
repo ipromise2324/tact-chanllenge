@@ -31,7 +31,7 @@ contract Task2 with Deployable {
         to: msg.sender,
         value: 0,
         bounce: false,
-        mode: SendRemainingValue + SendIgnoreErrors
+        mode: SendPayGasSeparately + SendIgnoreErrors
       });
     }
   }
@@ -41,7 +41,7 @@ contract Task2 with Deployable {
       to: self.admin,
       value: 0,
       bounce: false,
-      mode: SendRemainingValue + SendIgnoreErrors,
+      mode: SendPayGasSeparately + SendIgnoreErrors,
       body: beginCell().storeAddress(context().sender).storeRef(msg.asCell()).endCell()
     });
   }
