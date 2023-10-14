@@ -38,7 +38,7 @@ contract Task2 with Deployable {
       throw(0xffffff);
     }
   }
-  // TEST
+  
   receive(msg: Slice) {
     send(SendParameters{
       to: self.admin,
