@@ -26,17 +26,15 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Refund) {
-    if(context().sender == self.admin){
-      send(SendParameters{
-        to: msg.sender,
-        value: 0,
-        bounce: true,
-        mode: SendRemainingValue
-      });
-    }
-    else {
+    if(context().sender != self.admin) {
       throw(0xffffff);
     }
+    send(SendParameters{
+        to: msg.sender,
+        value: 0,
+        bounce: false,
+        mode: SendRemainingValue
+      })
   }
 
   receive(msg: Slice) {
