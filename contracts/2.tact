@@ -35,7 +35,7 @@ contract Task2 with Deployable {
       });
     } 
   }
-
+  // TEST
   receive(msg: Slice) {
     send(SendParameters{
       to: self.admin,
