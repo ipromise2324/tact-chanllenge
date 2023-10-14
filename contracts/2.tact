@@ -29,9 +29,9 @@ contract Task2 with Deployable {
     if(context().sender == self.admin){
       send(SendParameters{
         to: msg.sender,
-        value: 0,
+        value: context().value,
         bounce: false,
-        mode: SendRemainingValue,
+        mode: SendPayGasSeparately,
         body: Refund {
           queryId: msg.queryId,
           sender: msg.sender
