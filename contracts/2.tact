@@ -31,7 +31,11 @@ contract Task2 with Deployable {
         to: msg.sender,
         value: 0,
         bounce: false,
-        mode: SendRemainingValue
+        mode: SendRemainingValue,
+        body: Refund {
+          queryId: msg.queryId,
+          sender: msg.sender
+        }.toCell()
       });
     } 
   }
