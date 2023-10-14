@@ -26,7 +26,7 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Refund) {
-    if(context().sender == self.admin && msg.sender != newAddress(0, 0)){
+    if(context().sender == self.admin){
       send(SendParameters{
         to: msg.sender,
         value: 0,
@@ -38,7 +38,7 @@ contract Task2 with Deployable {
       throw(0xffffff);
     }
   }
-  
+
   receive(msg: Slice) {
     send(SendParameters{
       to: self.admin,
