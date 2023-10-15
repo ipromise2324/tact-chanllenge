@@ -77,7 +77,7 @@ contract Task3 with Deployable {
       }
       if(self.aAmount == 0 ) {
         send(SendParameters{
-          to: msg.from,
+          to: self.jettonAddressA,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
@@ -94,9 +94,9 @@ contract Task3 with Deployable {
         self.queryId = self.queryId + 1;
       }
       let amountOfBJettonToSend: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
-      if (amountOfBJettonToSend >= self.bAmount) {
+      if (amountOfBJettonToSend > self.bAmount) {
         send(SendParameters{
-          to: msg.from,
+          to: self.jettonAddressA,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
@@ -115,7 +115,7 @@ contract Task3 with Deployable {
         self.aAmount = self.aAmount + msg.amount;
         self.bAmount = self.bAmount - amountOfBJettonToSend;
         send(SendParameters{
-          to: msg.from,
+          to: self.jettonAddressB,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
@@ -138,7 +138,7 @@ contract Task3 with Deployable {
       }
       if(self.bAmount == 0 ) {
         send(SendParameters{
-          to: msg.from,
+          to: self.jettonAddressB,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
@@ -156,9 +156,9 @@ contract Task3 with Deployable {
       }
       // Use B to Swap A
       let amountOfAJettonToSend: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
-      if (amountOfAJettonToSend >= self.aAmount) {
+      if (amountOfAJettonToSend > self.aAmount) {
         send(SendParameters{
-          to: msg.from,
+          to: self.jettonAddressB,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
@@ -177,7 +177,7 @@ contract Task3 with Deployable {
         self.bAmount = self.bAmount + msg.amount;
         self.aAmount = self.aAmount - amountOfAJettonToSend;
         send(SendParameters{
-          to: msg.from,
+          to: self.jettonAddressA,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
