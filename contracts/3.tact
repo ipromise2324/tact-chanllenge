@@ -91,6 +91,7 @@ contract Task3 with Deployable {
             forwardPayload: emptySlice()
           }.toCell()
         });
+        thorw(0xffffff);
       } else {
         self.aAmount = self.aAmount + msg.amount;
         self.bAmount = self.bAmount - amountOfBJettonToSend;
@@ -133,6 +134,7 @@ contract Task3 with Deployable {
             forwardPayload: emptySlice()
           }.toCell()
         });
+        thorw(0xffffff);
       } else {
         self.bAmount = self.bAmount + msg.amount;
         self.aAmount = self.aAmount - amountOfAJettonToSend;
