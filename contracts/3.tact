@@ -52,8 +52,8 @@ message(0xf8a7ea5) TokenTransfer {
 
 contract Task3 with Deployable {
   owner: Address;
-  a: Int;
-  b: Int;
+  aAmount: Int;
+  bAmount: Int;
   jAddressA: Address;
   jAddressB: Address;
   decimal: Int;
@@ -62,8 +62,8 @@ contract Task3 with Deployable {
     self.owner = admin;
     self.jAddressA = newJAddressA;
     self.jAddressB = newJAddressB;
-    self.a = 0;
-    self.b = 0;
+    self.aAmount = 0;
+    self.bAmount = 0;
     self.decimal = 1000000000;
   }
 
@@ -71,10 +71,9 @@ contract Task3 with Deployable {
     let ctx: Context = context();
     let notOwner: Bool = ctx.sender != self.owner;
     if(ctx.sender == self.jAddressA) {
-      self.a = self.a + msg.amount;
       if(notOwner) {
-        let amount: Int = msg.amount * (self.b * self.decimal / self.a) / self.decimal;
-        if (amount > 0){
+        let amount: Int = msg.amount * (self.bAmount * self.decimal / self.aAmount) / self.decimal;
+        if (amount >= self.bAmount){
           send(SendParameters{
             to: self.jAddressB,
             value: 0,
@@ -90,14 +89,35 @@ contract Task3 with Deployable {
               forwardPayload: emptySlice()
             }.toCell()
           });
+          self.aAmount = self.aAmount + msg.amount;
+        }
+        else {
+          send(SendParameters{
+            to: ctx.sender,
+            value: 0,
+            bounce: false,
+            mode: SendRemainingValue + SendIgnoreErrors,
+            body: TokenTransfer{
+              queryId: 0,
+              amount: msg.amount,
+              destination: msg.from,
+              responseDestination: null,
+              customPayload: null,
+              forwardTonAmount: 0,
+              forwardPayload: emptySlice()
+            }.toCell()
+          });
+          throw(0xffffff);
         }
       }
-      return;
+      else {
+        self.aAmount = self.aAmount + msg.amount;
+      }
     } else if(ctx.sender == self.jAddressB) {
-      self.b = self.b + msg.amount;
+      self.bAmount = self.bAmount + msg.amount;
       if(notOwner) {
-        let amount: Int = msg.amount * (self.a * self.decimal/ self.b) / self.decimal;
-        if (amount > 0) {
+        let amount: Int = msg.amount * (self.aAmount * self.decimal / self.bAmount) / self.decimal;
+        if (amount >= self.aAmount) {
           send(SendParameters{
             to: self.jAddressA,
             value: 0,
@@ -112,11 +132,33 @@ contract Task3 with Deployable {
               forwardPayload: emptySlice()
             }.toCell()
           });
-          return;
+          self.bAmount = self.bAmount + msg.amount;
+        }
+        else {
+          send(SendParameters{
+            to: ctx.sender,
+            value: 0,
+            bounce: false,
+            mode: SendRemainingValue + SendIgnoreErrors,
+            body: TokenTransfer{
+              queryId: 0,
+              amount: msg.amount,
+              destination: msg.from,
+              responseDestination: null,
+              customPayload: null,
+              forwardTonAmount: 0,
+              forwardPayload: emptySlice()
+            }.toCell()
+          });
+          throw(0xffffff);
         }
       }
+      else {
+        self.bAmount = self.bAmount + msg.amount;
+      }
     }
-    send(SendParameters{
+    else {
+      send(SendParameters{
         to: ctx.sender,
         value: 0,
         bounce: false,
@@ -131,19 +173,21 @@ contract Task3 with Deployable {
           forwardPayload: emptySlice()
         }.toCell()
       });
+      throw(0xffffff);
+    }
   }
 
   get fun price(token: Address): Int {
     if(token == self.jAddressA) {
-      return self.b / self.a;
+      return self.bAmount / self.aAmount;
     }
-    return self.a / self.b;
+    return self.aAmount / self.bAmount;
   }
   
   get fun balance(token: Address): Int {
     if(token == self.jAddressA) {
-      return self.a;
+      return self.aAmount;
     } 
-    return self.b;
+    return self.bAmount;
   }
 }
