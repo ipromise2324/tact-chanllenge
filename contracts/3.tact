@@ -94,6 +94,7 @@ contract Task3 with Deployable {
         self.queryId = self.queryId + 1;
       }
       let amountOfBJettonToSend: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
+      amountOfBJettonToSend = amountOfBJettonToSend + 1;
       if (amountOfBJettonToSend > self.bAmount) {
         send(SendParameters{
           to: self.jettonAddressA,
@@ -156,6 +157,7 @@ contract Task3 with Deployable {
       }
       // Use B to Swap A
       let amountOfAJettonToSend: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
+      amountOfAJettonToSend = amountOfAJettonToSend + 1;
       if (amountOfAJettonToSend > self.aAmount) {
         send(SendParameters{
           to: self.jettonAddressB,
