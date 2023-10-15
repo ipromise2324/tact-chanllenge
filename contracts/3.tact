@@ -77,14 +77,17 @@ contract Task3 with Deployable {
       }
       if(self.aAmount == 0 ) {
         send(SendParameters{
-          to: self.jettonAddressA,
+          to: msg.from,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
-          body: TokenNotification{
+          body: TokenTransfer{
             queryId: self.queryId,
             amount: msg.amount,
-            from: myAddress(),
+            destination: msg.from,
+            responseDestination: null,
+            customPayload: null,
+            forwardTonAmount: 0,
             forwardPayload: emptySlice()
           }.toCell()
         });
@@ -93,14 +96,17 @@ contract Task3 with Deployable {
       let amountOfBJettonToSend: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
       if (amountOfBJettonToSend >= self.bAmount) {
         send(SendParameters{
-          to: self.jettonAddressA,
+          to: msg.from,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
-          body: TokenNotification{
+          body: TokenTransfer{
             queryId: self.queryId,
             amount: msg.amount,
-            from: myAddress(),
+            destination: msg.from,
+            responseDestination: null,
+            customPayload: null,
+            forwardTonAmount: 0,
             forwardPayload: emptySlice()
           }.toCell()
         });
@@ -109,7 +115,7 @@ contract Task3 with Deployable {
         self.aAmount = self.aAmount + msg.amount;
         self.bAmount = self.bAmount - amountOfBJettonToSend;
         send(SendParameters{
-          to: self.jettonAddressB,
+          to: msg.from,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
@@ -117,9 +123,9 @@ contract Task3 with Deployable {
             queryId: self.queryId,
             amount: amountOfBJettonToSend,
             destination: msg.from,
-            responseDestination: msg.from,
+            responseDestination: null,
             customPayload: null,
-            forwardTonAmount: ton("0.05"),
+            forwardTonAmount: 0,
             forwardPayload: emptySlice()
           }.toCell()
         });
@@ -132,14 +138,17 @@ contract Task3 with Deployable {
       }
       if(self.bAmount == 0 ) {
         send(SendParameters{
-          to: self.jettonAddressB,
+          to: msg.from,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
-          body: TokenNotification{
+          body: TokenTransfer{
             queryId: self.queryId,
             amount: msg.amount,
-            from: myAddress(),
+            destination: msg.from,
+            responseDestination: null,
+            customPayload: null,
+            forwardTonAmount: 0,
             forwardPayload: emptySlice()
           }.toCell()
         });
@@ -149,14 +158,17 @@ contract Task3 with Deployable {
       let amountOfAJettonToSend: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
       if (amountOfAJettonToSend >= self.aAmount) {
         send(SendParameters{
-          to: self.jettonAddressB,
+          to: msg.from,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
-          body: TokenNotification{
+          body: TokenTransfer{
             queryId: self.queryId,
             amount: msg.amount,
-            from: myAddress(),
+            destination: msg.from,
+            responseDestination: null,
+            customPayload: null,
+            forwardTonAmount: 0,
             forwardPayload: emptySlice()
           }.toCell()
         });
@@ -165,7 +177,7 @@ contract Task3 with Deployable {
         self.bAmount = self.bAmount + msg.amount;
         self.aAmount = self.aAmount - amountOfAJettonToSend;
         send(SendParameters{
-          to: self.jettonAddressA,
+          to: msg.from,
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
@@ -173,9 +185,9 @@ contract Task3 with Deployable {
             queryId: self.queryId,
             amount: amountOfAJettonToSend,
             destination: msg.from,
-            responseDestination: msg.from,
+            responseDestination: null,
             customPayload: null,
-            forwardTonAmount: ton("0.05"),
+            forwardTonAmount: 0,
             forwardPayload: emptySlice()
           }.toCell()
         });
@@ -191,19 +203,13 @@ contract Task3 with Deployable {
     if(jetton == self.jettonAddressA) {
       return self.bAmount * self.decimal / self.aAmount;
     }
-    else if(jetton == self.jettonAddressB) {
-      return self.aAmount * self.decimal / self.bAmount;
-    }
-    return 0;
+    return self.aAmount * self.decimal / self.bAmount;
   }
   
   get fun balance(jetton: Address): Int {
     if(jetton == self.jettonAddressA) {
       return self.aAmount;
     }
-    else if(jetton == self.jettonAddressB) {
-      return self.bAmount;
-    }
-    return 0;
+    return self.bAmount;
   }
 }
