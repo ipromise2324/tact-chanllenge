@@ -78,7 +78,7 @@ contract Task3 with Deployable {
       if (amountOfBJettonToSend >= self.bAmount) {
         send(SendParameters{
           to: self.jettonAddressA,
-          value: 0,
+          value: ton("0.05"),
           bounce: false,
           mode: SendPayGasSeparately,//SendRemainingValue,
           body: TokenTransfer{
@@ -96,7 +96,7 @@ contract Task3 with Deployable {
         self.bAmount = self.bAmount - amountOfBJettonToSend;
         send(SendParameters{
           to: self.jettonAddressB,
-          value: 0,
+          value: ton("0.05"),
           bounce: false,
           mode: SendPayGasSeparately,//SendRemainingValue,
           body: TokenTransfer{
@@ -120,7 +120,7 @@ contract Task3 with Deployable {
       if (amountOfAJettonToSend >= self.aAmount) {
         send(SendParameters{
           to: self.jettonAddressB,
-          value: 0,
+          value: ton("0.05"),
           bounce: false,
           mode: SendPayGasSeparately,//SendRemainingValue,
           body: TokenTransfer{
@@ -138,7 +138,7 @@ contract Task3 with Deployable {
         self.aAmount = self.aAmount - amountOfAJettonToSend;
         send(SendParameters{
           to: self.jettonAddressA,
-          value: 0,
+          value: ton("0.05"),
           bounce: false,
           mode: SendPayGasSeparately,//SendRemainingValue,
           body: TokenTransfer{
