@@ -110,7 +110,7 @@ contract Task3 with Deployable {
             }.toCell()
           });
           self.aAmount = self.aAmount - msg.amount;
-          throw(0xffffff);
+          //throw(0xffffff);
         }
       }
     } else if(ctx.sender == self.jAddressB) {
@@ -151,7 +151,7 @@ contract Task3 with Deployable {
             }.toCell()
           });
           self.bAmount = self.bAmount - msg.amount;
-          throw(0xffffff);
+          //throw(0xffffff);
         }
       }
     }
