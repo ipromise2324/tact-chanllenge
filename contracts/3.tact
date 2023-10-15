@@ -81,13 +81,10 @@ contract Task3 with Deployable {
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
-          body: TokenTransfer{
+          body: TokenNotification{
             queryId: self.queryId,
             amount: msg.amount,
-            destination: msg.from,
-            responseDestination: msg.from,
-            customPayload: null,
-            forwardTonAmount: ton("0.05"),
+            from: myAddress(),
             forwardPayload: emptySlice()
           }.toCell()
         });
@@ -100,13 +97,10 @@ contract Task3 with Deployable {
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
-          body: TokenTransfer{
+          body: TokenNotification{
             queryId: self.queryId,
             amount: msg.amount,
-            destination: msg.from,
-            responseDestination: msg.from,
-            customPayload: null,
-            forwardTonAmount: ton("0.05"),
+            from: myAddress(),
             forwardPayload: emptySlice()
           }.toCell()
         });
@@ -142,13 +136,10 @@ contract Task3 with Deployable {
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
-          body: TokenTransfer{
+          body: TokenNotification{
             queryId: self.queryId,
             amount: msg.amount,
-            destination: msg.from,
-            responseDestination: msg.from,
-            customPayload: null,
-            forwardTonAmount: ton("0.05"),
+            from: myAddress(),
             forwardPayload: emptySlice()
           }.toCell()
         });
@@ -162,13 +153,10 @@ contract Task3 with Deployable {
           value: 0,
           bounce: true,
           mode: SendRemainingValue,
-          body: TokenTransfer{
+          body: TokenNotification{
             queryId: self.queryId,
             amount: msg.amount,
-            destination: msg.from,
-            responseDestination: msg.from,
-            customPayload: null,
-            forwardTonAmount: ton("0.05"),
+            from: myAddress(),
             forwardPayload: emptySlice()
           }.toCell()
         });
