@@ -75,9 +75,9 @@ contract Task3 with Deployable {
         self.aAmount = self.aAmount + msg.amount;
         return;
       }
-      if(self.aAmount == 0 ) {
-        throw(0xffffff);
-      }
+      // if(self.aAmount == 0 ) {
+      //   throw(0xffffff);
+      // }
       let amountOfBJettonToSend: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
       amountOfBJettonToSend = amountOfBJettonToSend ;
       if (amountOfBJettonToSend > self.bAmount) {
@@ -107,9 +107,9 @@ contract Task3 with Deployable {
         self.bAmount = self.bAmount + msg.amount;
         return;
       }
-      if(self.bAmount == 0 ) {
-        throw(0xffffff);
-      }
+      // if(self.bAmount == 0 ) {
+      //   throw(0xffffff);
+      // }
       // Use B to Swap A
       let amountOfAJettonToSend: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
       amountOfAJettonToSend = amountOfAJettonToSend ;
