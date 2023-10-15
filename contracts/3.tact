@@ -71,6 +71,7 @@ contract Task3 with Deployable {
     let ctx: Context = context();
     let notOwner: Bool = ctx.sender != self.owner;
     if(ctx.sender == self.jAddressA) {
+      self.aAmount = self.aAmount + msg.amount;
       if(notOwner) {
         let amount: Int = msg.amount * (self.bAmount * self.decimal / self.aAmount) / self.decimal;
         if (amount >= self.bAmount){
@@ -89,7 +90,7 @@ contract Task3 with Deployable {
               forwardPayload: emptySlice()
             }.toCell()
           });
-          self.aAmount = self.aAmount + msg.amount;
+          
         }
         else {
           send(SendParameters{
@@ -107,11 +108,9 @@ contract Task3 with Deployable {
               forwardPayload: emptySlice()
             }.toCell()
           });
+          self.aAmount = self.aAmount - msg.amount;
           throw(0xffffff);
         }
-      }
-      else {
-        self.aAmount = self.aAmount + msg.amount;
       }
     } else if(ctx.sender == self.jAddressB) {
       self.bAmount = self.bAmount + msg.amount;
@@ -132,7 +131,6 @@ contract Task3 with Deployable {
               forwardPayload: emptySlice()
             }.toCell()
           });
-          self.bAmount = self.bAmount + msg.amount;
         }
         else {
           send(SendParameters{
@@ -150,11 +148,9 @@ contract Task3 with Deployable {
               forwardPayload: emptySlice()
             }.toCell()
           });
+          self.bAmount = self.bAmount - msg.amount;
           throw(0xffffff);
         }
-      }
-      else {
-        self.bAmount = self.bAmount + msg.amount;
       }
     }
     else {
