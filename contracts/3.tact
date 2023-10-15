@@ -78,14 +78,14 @@ contract Task3 with Deployable {
       if (amountOfBJettonToSend >= self.bAmount) {
         send(SendParameters{
           to: self.jettonAddressA,
-          value: ton("0.05"),
-          bounce: false,
-          mode: SendPayGasSeparately,//SendRemainingValue,
+          value: 0,
+          bounce: true,
+          mode: SendRemainingValue,
           body: TokenTransfer{
             queryId: 0,
             amount: msg.amount,
             destination: msg.from,
-            responseDestination: msg.from,
+            responseDestination: null,
             customPayload: null,
             forwardTonAmount: 0,
             forwardPayload: emptySlice()
@@ -96,14 +96,14 @@ contract Task3 with Deployable {
         self.bAmount = self.bAmount - amountOfBJettonToSend;
         send(SendParameters{
           to: self.jettonAddressB,
-          value: ton("0.05"),
-          bounce: false,
-          mode: SendPayGasSeparately,//SendRemainingValue,
+          value: 0,
+          bounce: true,
+          mode: SendRemainingValue,
           body: TokenTransfer{
             queryId: 0,
             amount: amountOfBJettonToSend,
             destination: msg.from,
-            responseDestination: msg.from,
+            responseDestination: null,
             customPayload: null,
             forwardTonAmount: 0,
             forwardPayload: emptySlice()
@@ -120,14 +120,14 @@ contract Task3 with Deployable {
       if (amountOfAJettonToSend >= self.aAmount) {
         send(SendParameters{
           to: self.jettonAddressB,
-          value: ton("0.05"),
-          bounce: false,
-          mode: SendPayGasSeparately,//SendRemainingValue,
+          value: 0,
+          bounce: true,
+          mode: SendRemainingValue,
           body: TokenTransfer{
             queryId: 0,
             amount: msg.amount,
             destination: msg.from,
-            responseDestination: msg.from,
+            responseDestination: null,
             customPayload: null,
             forwardTonAmount: 0,
             forwardPayload: emptySlice()
@@ -138,14 +138,14 @@ contract Task3 with Deployable {
         self.aAmount = self.aAmount - amountOfAJettonToSend;
         send(SendParameters{
           to: self.jettonAddressA,
-          value: ton("0.05"),
-          bounce: false,
-          mode: SendPayGasSeparately,//SendRemainingValue,
+          value: 0,
+          bounce: true,
+          mode: SendRemainingValue,
           body: TokenTransfer{
             queryId: 0,
             amount: amountOfAJettonToSend,
             destination: msg.from,
-            responseDestination: msg.from,
+            responseDestination: null,
             customPayload: null,
             forwardTonAmount: 0,
             forwardPayload: emptySlice()
