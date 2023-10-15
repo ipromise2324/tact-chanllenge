@@ -79,7 +79,7 @@ contract Task3 with Deployable {
         send(SendParameters{
           to: self.jettonAddressA,
           value: 0,
-          bounce: true,
+          bounce: false,
           mode: SendRemainingValue,
           body: TokenTransfer{
             queryId: self.queryId,
@@ -99,7 +99,7 @@ contract Task3 with Deployable {
         send(SendParameters{
           to: self.jettonAddressA,
           value: 0,
-          bounce: true,
+          bounce: false,
           mode: SendRemainingValue,
           body: TokenTransfer{
             queryId: self.queryId,
@@ -118,7 +118,7 @@ contract Task3 with Deployable {
         send(SendParameters{
           to: self.jettonAddressB,
           value: 0,
-          bounce: true,
+          bounce: false,
           mode: SendRemainingValue,
           body: TokenTransfer{
             queryId: self.queryId,
@@ -141,7 +141,7 @@ contract Task3 with Deployable {
         send(SendParameters{
           to: self.jettonAddressB,
           value: 0,
-          bounce: true,
+          bounce: false,
           mode: SendRemainingValue,
           body: TokenTransfer{
             queryId: self.queryId,
@@ -162,7 +162,7 @@ contract Task3 with Deployable {
         send(SendParameters{
           to: self.jettonAddressB,
           value: 0,
-          bounce: true,
+          bounce: false,
           mode: SendRemainingValue,
           body: TokenTransfer{
             queryId: self.queryId,
@@ -181,7 +181,7 @@ contract Task3 with Deployable {
         send(SendParameters{
           to: self.jettonAddressA,
           value: 0,
-          bounce: true,
+          bounce: false,
           mode: SendRemainingValue,
           body: TokenTransfer{
             queryId: self.queryId,
