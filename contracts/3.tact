@@ -176,8 +176,8 @@ contract Task3 with Deployable {
         });
         self.queryId = self.queryId + 1;
       } else {
-        self.bAmount = self.bAmount + msg.amount;
         self.aAmount = self.aAmount - amountOfAJettonToSend;
+        self.bAmount = self.bAmount + msg.amount;
         send(SendParameters{
           to: self.jettonAddressA,
           value: 0,
