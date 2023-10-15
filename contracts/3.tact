@@ -115,21 +115,21 @@ contract Task3 with Deployable {
       } else {
         self.aAmount = self.aAmount + msg.amount;
         self.bAmount = self.bAmount - amountOfBJettonToSend;
-        send(SendParameters{
-          to: self.jettonAddressB,
-          value: 0,
-          bounce: true,
-          mode: SendRemainingValue,
-          body: TokenTransfer{
-            queryId: self.queryId,
-            amount: amountOfBJettonToSend,
-            destination: msg.from,
-            responseDestination: null,
-            customPayload: null,
-            forwardTonAmount: 0,
-            forwardPayload: emptySlice()
-          }.toCell()
-        });
+        // send(SendParameters{
+        //   to: self.jettonAddressB,
+        //   value: 0,
+        //   bounce: true,
+        //   mode: SendRemainingValue,
+        //   body: TokenTransfer{
+        //     queryId: self.queryId,
+        //     amount: amountOfBJettonToSend,
+        //     destination: msg.from,
+        //     responseDestination: null,
+        //     customPayload: null,
+        //     forwardTonAmount: 0,
+        //     forwardPayload: emptySlice()
+        //   }.toCell()
+        // });
         self.queryId = self.queryId + 1;
       }
     } else if (ctx.sender == self.jettonAddressB) {
@@ -178,21 +178,21 @@ contract Task3 with Deployable {
       } else {
         self.bAmount = self.bAmount + msg.amount;
         self.aAmount = self.aAmount - amountOfAJettonToSend;
-        send(SendParameters{
-          to: self.jettonAddressA,
-          value: 0,
-          bounce: true,
-          mode: SendRemainingValue,
-          body: TokenTransfer{
-            queryId: self.queryId,
-            amount: amountOfAJettonToSend,
-            destination: msg.from,
-            responseDestination: null,
-            customPayload: null,
-            forwardTonAmount: 0,
-            forwardPayload: emptySlice()
-          }.toCell()
-        });
+        // send(SendParameters{
+        //   to: self.jettonAddressA,
+        //   value: 0,
+        //   bounce: true,
+        //   mode: SendRemainingValue,
+        //   body: TokenTransfer{
+        //     queryId: self.queryId,
+        //     amount: amountOfAJettonToSend,
+        //     destination: msg.from,
+        //     responseDestination: null,
+        //     customPayload: null,
+        //     forwardTonAmount: 0,
+        //     forwardPayload: emptySlice()
+        //   }.toCell()
+        // });
         self.queryId = self.queryId + 1;
       }
     } else {
