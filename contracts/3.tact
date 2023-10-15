@@ -90,6 +90,7 @@ contract Task3 with Deployable {
               forwardPayload: emptySlice()
             }.toCell()
           });
+          self.bAmount = self.bAmount - amount;
           
         }
         else {
@@ -131,6 +132,7 @@ contract Task3 with Deployable {
               forwardPayload: emptySlice()
             }.toCell()
           });
+          self.aAmount = self.aAmount - msg.amount;
         }
         else {
           send(SendParameters{
@@ -154,21 +156,21 @@ contract Task3 with Deployable {
       }
     }
     else {
-      send(SendParameters{
-        to: ctx.sender,
-        value: 0,
-        bounce: false,
-        mode: SendRemainingValue + SendIgnoreErrors,
-        body: TokenTransfer{
-          queryId: 0,
-          amount: msg.amount,
-          destination: msg.from,
-          responseDestination: null,
-          customPayload: null,
-          forwardTonAmount: 0,
-          forwardPayload: emptySlice()
-        }.toCell()
-      });
+      // send(SendParameters{
+      //   to: ctx.sender,
+      //   value: 0,
+      //   bounce: false,
+      //   mode: SendRemainingValue + SendIgnoreErrors,
+      //   body: TokenTransfer{
+      //     queryId: 0,
+      //     amount: msg.amount,
+      //     destination: msg.from,
+      //     responseDestination: null,
+      //     customPayload: null,
+      //     forwardTonAmount: 0,
+      //     forwardPayload: emptySlice()
+      //   }.toCell()
+      // });
       throw(0xffffff);
     }
   }
