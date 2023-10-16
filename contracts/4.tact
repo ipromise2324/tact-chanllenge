@@ -1,5 +1,4 @@
 import "@stdlib/deploy";
-
 /*
   TASK 4 - NFT locker
   Implement a smart contract that will lock NFT for a period of time specified by the owner.
@@ -72,6 +71,23 @@ contract Task4 with Deployable {
         } else {
             self.nftAddress = context().sender;
             let payload: Slice = msg.forwardPayload;
+            if (payload.empty()) {
+                // return nft back to sender
+                send(SendParameters{to: context().sender,
+                        value: 0,
+                        bounce: true,
+                        mode: SendRemainingValue,
+                        body: Transfer{queryId: msg.queryId,
+                            newOwner: msg.prevOwner,
+                            responseDestination: myAddress(),
+                            customPayload: null,
+                            forwardAmount: ton("0.05"),
+                            forwardPayload: msg.forwardPayload
+                        }.toCell()
+                    }
+                );
+                return ;
+            }
             let lock: Int = payload.loadUint(32);
             self.lockTime = lock + now();
             self.nftOwner = msg.prevOwner;
@@ -96,25 +112,25 @@ contract Task4 with Deployable {
                 }
             );
         } else {
-            // if (self.nftAddress == null) {
-            //     return ;
-            // }
-            // if (msg.nftAddress != self.nftAddress!!) {
-            //     return ;
-            // }
-            // send(SendParameters{to: self.nftAddress!!,
-            //         value: 0,
-            //         bounce: true,
-            //         mode: SendRemainingBalance + SendDestroyIfZero,
-            //         body: Transfer{queryId: msg.queryId,
-            //             newOwner: self.nftOwner!!,
-            //             responseDestination: myAddress(),
-            //             customPayload: null,
-            //             forwardAmount: ton("0.05"),
-            //             forwardPayload: emptySlice()
-            //         }.toCell()
-            //     }
-            // );
+            if (self.nftAddress == null) {
+                return ;
+            }
+            if (msg.nftAddress != self.nftAddress!!) {
+                return ;
+            }
+            send(SendParameters{to: self.nftAddress!!,
+                    value: 0,
+                    bounce: true,
+                    mode: SendRemainingBalance + SendDestroyIfZero,
+                    body: Transfer{queryId: msg.queryId,
+                        newOwner: self.nftOwner!!,
+                        responseDestination: myAddress(),
+                        customPayload: null,
+                        forwardAmount: ton("0.05"),
+                        forwardPayload: emptySlice()
+                    }.toCell()
+                }
+            );
             self.nftAddress = null;
             self.nftOwner = null;
             self.lockTime = 0;
