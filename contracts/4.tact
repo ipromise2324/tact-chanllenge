@@ -80,7 +80,7 @@ contract Task4 with Deployable {
                         mode: SendRemainingValue,
                         body: Transfer{queryId: msg.queryId,
                             newOwner: msg.prevOwner,
-                            responseDestination: myAddress(),
+                            responseDestination: newAddress(0, 0),
                             customPayload: null,
                             forwardAmount: 0,
                             forwardPayload: msg.forwardPayload
