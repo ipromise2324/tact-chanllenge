@@ -85,13 +85,12 @@ contract Task3 with Deployable {
             queryId: 0,
             amount: msg.amount,
             destination: msg.from,
-            responseDestination: null,
+            responseDestination: myAddress(),
             customPayload: null,
-            forwardTonAmount: 0,
+            forwardTonAmount: ton("0.01"),
             forwardPayload: emptySlice()
           }.toCell()
         });
-        throw(0xffffff);
       } else {
         self.aAmount = self.aAmount + msg.amount;
         self.bAmount = self.bAmount - amountOfBJettonToSend;
@@ -104,9 +103,9 @@ contract Task3 with Deployable {
             queryId: 0,
             amount: amountOfBJettonToSend,
             destination: msg.from,
-            responseDestination: null,
+            responseDestination: myAddress(),
             customPayload: null,
-            forwardTonAmount: 0,
+            forwardTonAmount: ton("0.01"),
             forwardPayload: emptySlice()
           }.toCell()
         });
@@ -128,13 +127,12 @@ contract Task3 with Deployable {
             queryId: 0,
             amount: msg.amount,
             destination: msg.from,
-            responseDestination: null,
+            responseDestination: myAddress(),
             customPayload: null,
-            forwardTonAmount: 0,
+            forwardTonAmount: ton("0.01"),
             forwardPayload: emptySlice()
           }.toCell()
         });
-        throw(0xffffff);
       } else {
         self.bAmount = self.bAmount + msg.amount;
         self.aAmount = self.aAmount - amountOfAJettonToSend;
@@ -147,9 +145,9 @@ contract Task3 with Deployable {
             queryId: 0,
             amount: amountOfAJettonToSend,
             destination: msg.from,
-            responseDestination: null,
+            responseDestination: myAddress(),
             customPayload: null,
-            forwardTonAmount: 0,
+            forwardTonAmount: ton("0.01"),
             forwardPayload: emptySlice()
           }.toCell()
         });
