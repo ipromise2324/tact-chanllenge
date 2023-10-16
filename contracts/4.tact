@@ -94,8 +94,6 @@ contract Task4 with Deployable {
       });
     } else {
       if(msg.nftAddress == self.nftAddress) {
-        self.nftAddress = null;
-        self.nftOwner = null;
         send(SendParameters{
             to: ctx.sender,
             value: 0,
@@ -110,6 +108,8 @@ contract Task4 with Deployable {
               forwardPayload: emptySlice()
             }.toCell()
         });
+        self.nftAddress = null;
+        self.nftOwner = null;
       }
       else {
         throw(0xffffff);
