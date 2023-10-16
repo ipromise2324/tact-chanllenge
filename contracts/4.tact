@@ -93,9 +93,9 @@ contract Task4 with Deployable {
         body: "NFT is still locked".asComment()
       });
     } else {
-      if(msg.nftAddress == self.nftAddress) {
+      if(msg.nftAddress == self.nftAddress!!) {
         send(SendParameters{
-            to: ctx.sender,
+            to: self.nftAddress!!,
             value: 0,
             bounce: false,
             mode: SendRemainingBalance,
