@@ -88,9 +88,10 @@ contract Task4 with Deployable {
     if(msg.nftAddress != self.nftAddress!!) {
       throw(0xffffff);
     }
+    let ctx: Context  = context();
     require(ctx.sender == self.nftOwner, "Invalid sender");
 
-    let ctx: Context  = context();
+
     if (now() < self.lockTime) {
       send(SendParameters{
         to: ctx.sender,
