@@ -57,9 +57,9 @@ contract Task4 with Deployable {
         if (self.nftAddress != null) {
             // return nft back to sender
             send(SendParameters{to: context().sender,
-                    value: 0,
+                    value: ton("0.05"),
                     bounce: true,
-                    mode: SendRemainingValue + SendIgnoreErrors,
+                    mode: SendPayGasSeparately + SendIgnoreErrors,
                     body: Transfer{queryId: msg.queryId,
                         newOwner: msg.prevOwner,
                         responseDestination: myAddress(),
@@ -72,7 +72,8 @@ contract Task4 with Deployable {
         } else {
             self.nftAddress = context().sender;
             let payload: Slice = msg.forwardPayload;
-            self.lockTime = payload.loadUint(32) + now();
+            let lock: Int = payload.loadUint(32);
+            self.lockTime = lock + now();
             self.nftOwner = msg.prevOwner;
         }
     }
@@ -88,9 +89,9 @@ contract Task4 with Deployable {
         require(ctx.sender == self.nftOwner, "Invalid sender");
         if (now() < self.lockTime) {
             send(SendParameters{to: ctx.sender,
-                    value: 0,
+                    value: ton("0.05"),
                     bounce: true,
-                    mode: SendRemainingValue + SendIgnoreErrors,
+                    mode: SendPayGasSeparately,
                     body: "NFT is still locked".asComment()
                 }
             );
