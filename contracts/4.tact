@@ -1,4 +1,5 @@
 import "@stdlib/deploy";
+
 /*
   TASK 4 - NFT locker
   Implement a smart contract that will lock NFT for a period of time specified by the owner.
@@ -109,7 +110,7 @@ contract Task4 with Deployable {
             send(SendParameters{to: msg.nftAddress,
                     value: 0,
                     bounce: true,
-                    mode: SendRemainingBalance + SendDestroyIfZero,
+                    mode: SendRemainingBalance,
                     body: Transfer{queryId: msg.queryId,
                         newOwner: self.nftOwner!!,
                         responseDestination: myAddress(),
@@ -119,9 +120,6 @@ contract Task4 with Deployable {
                     }.toCell()
                 }
             );
-            self.nftAddress = null;
-            self.nftOwner = null;
-            self.lockTime = 0;
         }
     }
 
