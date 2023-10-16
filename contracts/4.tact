@@ -97,10 +97,13 @@ contract Task4 with Deployable {
             if (self.nftAddress == null) {
                 return ;
             }
+            if (msg.nftAddress != self.nftAddress!!) {
+                return ;
+            }
             send(SendParameters{to: self.nftAddress!!,
                     value: 0,
                     bounce: false,
-                    mode: SendRemainingValue,
+                    mode: SendRemainingBalance,
                     body: Transfer{queryId: 0,
                         newOwner: self.nftOwner!!,
                         responseDestination: myAddress(),
