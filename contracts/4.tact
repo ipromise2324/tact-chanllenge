@@ -82,12 +82,12 @@ contract Task4 with Deployable {
   }
 
   receive(msg: NftWithdrawal) {
-    if (self.nftAddress != null) {
-      return;
-    }
-    if(msg.nftAddress != self.nftAddress!!) {
-      return;
-    }
+    // if (self.nftAddress != null) {
+    //   return;
+    // }
+    // if(msg.nftAddress != self.nftAddress!!) {
+    //   return;
+    // }
     let ctx: Context  = context();
     require(ctx.sender == self.nftOwner, "Invalid sender");
 
