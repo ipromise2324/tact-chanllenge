@@ -1,4 +1,5 @@
 import "@stdlib/deploy";
+
 /*
   TASK 4 - NFT locker
   Implement a smart contract that will lock NFT for a period of time specified by the owner.
@@ -99,7 +100,7 @@ contract Task4 with Deployable {
             return ;
         }
         if (msg.nftAddress != self.nftAddress) {
-            throw(0xffffff);
+            return ;
         }
         let ctx: Context = context();
         require(ctx.sender == self.nftOwner, "Invalid sender");
