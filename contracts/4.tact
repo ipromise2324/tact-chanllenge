@@ -58,20 +58,20 @@ contract Task4 with Deployable {
             // return nft back to sender
             send(SendParameters{to: context().sender,
                     value: 0,
-                    bounce: false,
+                    bounce: true,
                     mode: SendRemainingValue + SendIgnoreErrors,
                     body: Transfer{queryId: msg.queryId,
                         newOwner: msg.prevOwner,
                         responseDestination: myAddress(),
                         customPayload: null,
-                        forwardAmount: ton("0.01"),
+                        forwardAmount: ton("0.05"),
                         forwardPayload: msg.forwardPayload
                     }.toCell()
                 }
             );
         } else {
-            let payload: Slice = msg.forwardPayload;
             self.nftAddress = context().sender;
+            let payload: Slice = msg.forwardPayload;
             self.lockTime = payload.loadUint(32) + now();
             self.nftOwner = msg.prevOwner;
         }
@@ -89,8 +89,8 @@ contract Task4 with Deployable {
         if (now() < self.lockTime) {
             send(SendParameters{to: ctx.sender,
                     value: 0,
-                    bounce: false,
-                    mode: SendRemainingValue,
+                    bounce: true,
+                    mode: SendRemainingValue + SendIgnoreErrors,
                     body: "NFT is still locked".asComment()
                 }
             );
@@ -103,13 +103,13 @@ contract Task4 with Deployable {
             }
             send(SendParameters{to: self.nftAddress!!,
                     value: 0,
-                    bounce: false,
-                    mode: SendRemainingBalance,
+                    bounce: true,
+                    mode: SendRemainingBalance + SendIgnoreErrors,
                     body: Transfer{queryId: msg.queryId,
                         newOwner: self.nftOwner!!,
                         responseDestination: myAddress(),
                         customPayload: null,
-                        forwardAmount: ton("0.01"),
+                        forwardAmount: ton("0.05"),
                         forwardPayload: emptySlice()
                     }.toCell()
                 }
