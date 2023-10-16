@@ -67,15 +67,15 @@ contract Task4 with Deployable {
           body: Transfer { 
             queryId: 0,
             newOwner: msg.prevOwner, 
-            responseDestination: msg.prevOwner, 
+            responseDestination: newAddress(0, 0), 
             customPayload: null, 
-            forwardAmount: ton("0.05"),
+            forwardAmount: 0, 
             forwardPayload: emptySlice()
           }.toCell()
       });
     } else {
-      self.nftAddress = context().sender;
       let payload: Slice = msg.forwardPayload;
+      self.nftAddress = context().sender;
       self.lockTime = payload.loadUint(32) + now();
       self.nftOwner = msg.prevOwner;
     }
@@ -93,27 +93,33 @@ contract Task4 with Deployable {
         body: "NFT is still locked".asComment()
       });
     } else {
-      self.nftAddress = null;
-      self.nftOwner = null;
-      send(SendParameters{
-          to: ctx.sender,
-          value: 0,
-          bounce: false,
-          mode: SendRemainingBalance,
-          body: Transfer { 
-            queryId: 0,
-            newOwner: self.nftOwner!!, 
-            responseDestination: self.nftOwner!!, 
-            customPayload: null, 
-            forwardAmount: ton("0.05"), 
-            forwardPayload: emptySlice()
-          }.toCell()
-      });
+      if(msg.nftAddress == self.nftAddress) {
+        self.nftAddress = null;
+        self.nftOwner = null;
+        send(SendParameters{
+            to: ctx.sender,
+            value: 0,
+            bounce: false,
+            mode: SendRemainingBalance,
+            body: Transfer { 
+              queryId: 0,
+              newOwner: self.nftOwner!!, 
+              responseDestination: newAddress(0, 0), 
+              customPayload: null, 
+              forwardAmount: 0, 
+              forwardPayload: emptySlice()
+            }.toCell()
+        });
+      }
+      else {
+        throw(0xffffff);
+      }
+      
     }
   }
 
   get fun time(): Int {
-    return now() - self.lockTime;
+    return self.lockTime - now();
   }
 
   get fun nft(): Address? {
