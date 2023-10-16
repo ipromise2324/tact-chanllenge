@@ -1,5 +1,4 @@
 import "@stdlib/deploy";
-
 /*
   TASK 4 - NFT locker
   Implement a smart contract that will lock NFT for a period of time specified by the owner.
@@ -118,7 +117,7 @@ contract Task4 with Deployable {
     }
 
     get fun time(): Int {
-        if (self.lockTime == 0) {
+        if (self.lockTime == 0 || now() > self.lockTime) {
             return 0;
         }
         return self.lockTime - now();
