@@ -90,8 +90,9 @@ contract Task5 with Deployable {
     if(ctx.value < ton("2.1")) {
       // TODO: but only in case that TON attached is enough to process refund without losing TONs on the SC's balance
       // use if(ctx.value >= ton("0.02"))
-      if(ctx.value < ton("0.1")) {
-        return;}
+      if(ctx.value < ton("0.03")) {
+        return;
+        }
       // Send NFT back
       send(SendParameters{
           to: ctx.sender,
@@ -181,7 +182,7 @@ contract Task5 with Deployable {
           newOwner: self.owner, 
           responseDestination: myAddress(),
           customPayload: null, 
-          forwardAmount: 0, 
+          forwardAmount: ton("0.01"), 
           forwardPayload: emptySlice() 
         }.toCell()
       });
