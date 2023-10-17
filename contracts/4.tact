@@ -106,12 +106,17 @@ contract Task4 with Deployable {
                         newOwner: self.nftOwner!!,
                         responseDestination: myAddress(),
                         customPayload: null,
-                        forwardAmount: ton("0.01"),
+                        forwardAmount: 0,
                         forwardPayload: emptySlice()
                     }.toCell()
                 }
             );
-            send(SendParameters{to: ctx.sender, value: 0, bounce: false, mode: SendRemainingBalance, body: emptyCell()}
+            send(SendParameters{to: ctx.sender,
+                    value: 0,
+                    bounce: false,
+                    mode: SendRemainingBalance + SendDestroyIfZero,
+                    body: emptyCell()
+                }
             );
             self.nftAddress = null;
             self.nftOwner = null;
