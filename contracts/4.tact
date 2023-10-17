@@ -120,14 +120,14 @@ contract Task4 with Deployable {
             );
             self.nftAddress = null;
             self.nftOwner = null;
-            self.lockTime = 0;
+            //self.lockTime = 0;
         }
     }
 
     get fun time(): Int {
-        if (self.lockTime == 0 || now() > self.lockTime) {
-            return 0;
-        }
+        // if (self.lockTime == 0 || now() > self.lockTime) {
+        //     return 0;
+        // }
         return self.lockTime - now();
     }
 
