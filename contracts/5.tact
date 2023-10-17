@@ -92,9 +92,9 @@ contract Task5 with Deployable {
     if(ctx.value < ton("2.1")) {
       // TODO: but only in case that TON attached is enough to process refund without losing TONs on the SC's balance
       // use if(ctx.value >= ton("0.02"))
-      if(ctx.value < ton("0.02")) {
-        return;
-        }
+      // if(ctx.value < ton("0.02")) {
+      //   return;
+      //   }
       // Send NFT back
       send(SendParameters{
           to: ctx.sender,
@@ -119,7 +119,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: ctx.sender,
         value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
-        bounce: false,
+        bounce: true,
         mode: 0,
         body: Transfer { 
           queryId: 0,            
@@ -135,7 +135,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.nfts.get(rndIdx)!!,
         value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
-        bounce: false,
+        bounce: true,
         mode: 0,
         body: Transfer { 
           queryId: 0,            
@@ -158,7 +158,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.owner,
         value: myBalance() - ton("0.1"),
-        bounce: false,
+        bounce: true,
         mode: 0,
         body: AdminFetchProfit { 
           queryId: 0
@@ -177,14 +177,14 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.08"),
-        bounce: false,
+        bounce: true,
         mode: 0,
         body: Transfer { 
           queryId: 0,            
           newOwner: self.owner, 
           responseDestination: myAddress(),
           customPayload: null, 
-          forwardAmount: ton("0.01"), 
+          forwardAmount: 0, 
           forwardPayload: emptySlice() 
         }.toCell()
       });
