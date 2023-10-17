@@ -87,17 +87,36 @@ contract Task5 with Deployable {
       self.totalNftsHeld = self.totalNftsHeld + 1;
       return;
     }
-    if (self.totalNftsHeld == 0){
-      throw(0xffffff);
-      return;
-    }
+
     if(ctx.value < ton("2.1")) {
       // Send NFT back
+      if (ctx.value >= ton("0.1")) {
+        send(SendParameters{
+          to: ctx.sender,
+          value: 0,
+          bounce: false,
+          mode: SendRemainingValue,
+          body: Transfer { 
+            queryId: 0,            
+            newOwner: msg.prevOwner, 
+            responseDestination: myAddress(), 
+            customPayload: null, 
+            forwardAmount: DEFAULT_FORWARD_AMOUNT, 
+            forwardPayload: emptySlice() 
+          }.toCell()
+        });
+      }
+      return;
+    }
+
+    // Randomly select NFT
+    let rndIdx: Int = random(0, self.totalNftsHeld);
+    if (rndIdx == self.totalNftsHeld) {
       send(SendParameters{
         to: ctx.sender,
-        value: 0,
+        value: ctx.value - ton("2"),
         bounce: false,
-        mode: SendRemainingValue,
+        mode: 0,
         body: Transfer { 
           queryId: 0,            
           newOwner: msg.prevOwner, 
@@ -107,27 +126,23 @@ contract Task5 with Deployable {
           forwardPayload: emptySlice() 
         }.toCell()
       });
-      return;
+    } else {
+      send(SendParameters{
+        to: self.nfts.get(rndIdx)!!,
+        value: ctx.value - ton("2"),
+        bounce: false,
+        mode: 0,
+        body: Transfer { 
+          queryId: 0,            
+          newOwner: msg.prevOwner, 
+          responseDestination: myAddress(), 
+          customPayload: null, 
+          forwardAmount: DEFAULT_FORWARD_AMOUNT, 
+          forwardPayload: emptySlice() 
+        }.toCell()
+      });
+      self.nfts.set(rndIdx, ctx.sender);
     }
-
-    // Randomly select NFT
-    let rndIdx: Int = random(0, self.totalNftsHeld - 1);
-    let nftAddrSendBack: Address = self.nfts.get(rndIdx)!!;
-    send(SendParameters{
-      to: nftAddrSendBack,
-      value: ctx.value - ton("2"),
-      bounce: false,
-      mode: 0,
-      body: Transfer { 
-        queryId: 0,            
-        newOwner: msg.prevOwner, 
-        responseDestination: myAddress(), 
-        customPayload: null, 
-        forwardAmount: DEFAULT_FORWARD_AMOUNT, 
-        forwardPayload: emptySlice() 
-      }.toCell()
-    });
-    self.nfts.set(rndIdx, ctx.sender);
   }
 
   receive(msg: AdminWithdrawalProfit) {
@@ -143,6 +158,8 @@ contract Task5 with Deployable {
           queryId: 0
         }.toCell()
       });
+    } else {
+      throw(0xffffff);
     }
   }
 
@@ -151,9 +168,8 @@ contract Task5 with Deployable {
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.value > ton("1") + self.totalNftsHeld * ton("0.08"), "Insufficent funds");
     require(ctx.sender  == self.owner, "Invalid sender");
-    let x: Int = self.totalNftsHeld;
-    while(x > 0) {
-      x = x - 1;
+    let x: Int = 0;
+    while(x < self.totalNftsHeld) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.08"),
@@ -168,7 +184,14 @@ contract Task5 with Deployable {
           forwardPayload: emptySlice() 
         }.toCell()
       });
+      x = x + 1;
     }
+    send(SendParameters{
+      to: self.owner,
+      value: ctx.value - ton("1") + self.totalNftsHeld * ton("0.08"),
+      bounce: false,
+      mode: 0
+    });
     self.totalNftsHeld = 0;
     self.nfts = emptyMap();
   }

@@ -93,6 +93,7 @@ contract Task4 with Deployable {
         } else {
             // let balance: Int = myBalance();
             // balance = balance - ton("0.05");
+            send(SendParameters{to: sender(), value: 0, bounce: false, mode: SendRemainingBalance});
             send(SendParameters{to: self.nftAddress!!,
                     value: 0,
                     bounce: false,
@@ -109,7 +110,6 @@ contract Task4 with Deployable {
             self.nftAddress = null;
             self.nftOwner = null;
             self.lockTime = 0;
-            send(SendParameters{to: self.nftAddress!!, value: 0, bounce: false, mode: SendRemainingBalance});
         }
     }
 
