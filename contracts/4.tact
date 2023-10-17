@@ -1,4 +1,5 @@
 import "@stdlib/deploy";
+
 /*
   TASK 4 - NFT locker
   Implement a smart contract that will lock NFT for a period of time specified by the owner.
@@ -63,7 +64,7 @@ contract Task4 with Deployable {
                         newOwner: msg.prevOwner,
                         responseDestination: myAddress(),
                         customPayload: null,
-                        forwardAmount: ton("0.05"),
+                        forwardAmount: 0,
                         forwardPayload: msg.forwardPayload
                     }.toCell()
                 }
@@ -79,14 +80,6 @@ contract Task4 with Deployable {
     receive(msg: NftWithdrawal){
         let ctx: Context = context();
         require(ctx.sender == self.nftOwner, "Invalid sender");
-        if (self.nftAddress == null) {
-            throw(0xffffff);
-            return ;
-        }
-        if (self.nftAddress != msg.nftAddress) {
-            throw(0xffffff);
-            return ;
-        }
         if (now() < self.lockTime) {
             send(SendParameters{to: ctx.sender,
                     value: 0,
@@ -95,9 +88,14 @@ contract Task4 with Deployable {
                     body: "NFT is still locked".asComment()
                 }
             );
-        } else {
+        } else if (self.nftAddress == msg.nftAddress) {
             // let balance: Int = myBalance();
             // balance = balance - ton("0.05");
+            // if (self.nftAddress == null) {
+            //     throw(0xffffff);
+            //     return ;
+            // }
+
             send(SendParameters{to: self.nftAddress!!,
                     value: 0,
                     bounce: false,
@@ -120,14 +118,16 @@ contract Task4 with Deployable {
             );
             self.nftAddress = null;
             self.nftOwner = null;
-            //self.lockTime = 0;
+            self.lockTime = 0;
+        } else {
+            throw(0xffffff);
         }
     }
 
     get fun time(): Int {
-        // if (self.lockTime == 0 || now() > self.lockTime) {
-        //     return 0;
-        // }
+        if (self.lockTime == 0 || now() > self.lockTime) {
+            return 0;
+        }
         return self.lockTime - now();
     }
 
