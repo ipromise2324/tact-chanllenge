@@ -90,7 +90,7 @@ contract Task5 with Deployable {
     if(ctx.value < ton("2.1")) {
       // TODO: but only in case that TON attached is enough to process refund without losing TONs on the SC's balance
       // use if(ctx.value >= ton("0.02"))
-      if(ctx.value < ton("0.02")) {
+      if(ctx.value < ton("0.1")) {
         return;
       }
       // Send NFT back
