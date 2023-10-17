@@ -1,5 +1,4 @@
 import "@stdlib/deploy";
-
 /*
   TASK 4 - NFT locker
   Implement a smart contract that will lock NFT for a period of time specified by the owner.
@@ -59,13 +58,13 @@ contract Task4 with Deployable {
             send(SendParameters{to: context().sender,
                     value: 0,
                     bounce: false,
-                    mode: SendRemainingValue + SendIgnoreErrors,
+                    mode: SendRemainingValue,
                     body: Transfer{queryId: msg.queryId,
                         newOwner: msg.prevOwner,
-                        responseDestination: myAddress(),
+                        responseDestination: msg.prevOwner,
                         customPayload: null,
                         forwardAmount: 0,
-                        forwardPayload: msg.forwardPayload
+                        forwardPayload: emptySlice()
                     }.toCell()
                 }
             );
@@ -89,22 +88,34 @@ contract Task4 with Deployable {
             return ;
         }
         if (now() < self.lockTime) {
-            self.reply("NFT is still locked".asComment());
+            send(SendParameters{to: ctx.sender,
+                    value: 0,
+                    bounce: false,
+                    mode: SendRemainingValue,
+                    body: "NFT is still locked".asComment()
+                }
+            );
         } else {
             // let balance: Int = myBalance();
             // balance = balance - ton("0.05");
-            send(SendParameters{to: sender(), value: 0, bounce: false, mode: SendRemainingBalance});
             send(SendParameters{to: self.nftAddress!!,
                     value: 0,
                     bounce: false,
                     mode: SendRemainingValue,
                     body: Transfer{queryId: msg.queryId,
                         newOwner: self.nftOwner!!,
-                        responseDestination: myAddress(),
+                        responseDestination: self.nftOwner!!,
                         customPayload: null,
                         forwardAmount: 0,
                         forwardPayload: emptySlice()
                     }.toCell()
+                }
+            );
+            send(SendParameters{to: ctx.sender,
+                    value: 0,
+                    bounce: true,
+                    mode: SendRemainingBalance,
+                    body: "NFT is still locked".asComment()
                 }
             );
             self.nftAddress = null;
