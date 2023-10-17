@@ -1,4 +1,5 @@
 import "@stdlib/deploy";
+
 /*
   TASK 4 - NFT locker
   Implement a smart contract that will lock NFT for a period of time specified by the owner.
@@ -63,7 +64,7 @@ contract Task4 with Deployable {
                         newOwner: msg.prevOwner,
                         responseDestination: myAddress(),
                         customPayload: null,
-                        forwardAmount: 0,
+                        forwardAmount: ton("0.01"),
                         forwardPayload: msg.forwardPayload
                     }.toCell()
                 }
@@ -79,6 +80,14 @@ contract Task4 with Deployable {
     receive(msg: NftWithdrawal){
         let ctx: Context = context();
         require(ctx.sender == self.nftOwner, "Invalid sender");
+        if (self.nftAddress == null) {
+            throw(0xffffff);
+            return ;
+        }
+        if (self.nftAddress != msg.nftAddress) {
+            throw(0xffffff);
+            return ;
+        }
         if (now() < self.lockTime) {
             send(SendParameters{to: ctx.sender,
                     value: 0,
@@ -91,10 +100,10 @@ contract Task4 with Deployable {
             // let balance: Int = myBalance();
             // balance = balance - ton("0.05");
             send(SendParameters{to: self.nftAddress!!,
-                    value: 0,
-                    bounce: true,
-                    mode: SendRemainingValue + SendIgnoreErrors,
-                    body: Transfer{queryId: 0,
+                    value: ton("0.02"),
+                    bounce: false,
+                    mode: SendIgnoreErrors,
+                    body: Transfer{queryId: msg.queryId,
                         newOwner: self.nftOwner!!,
                         responseDestination: self.nftOwner!!,
                         customPayload: null,
@@ -103,7 +112,8 @@ contract Task4 with Deployable {
                     }.toCell()
                 }
             );
-            send(SendParameters{to: self.nftOwner!!, value: 0, bounce: true, mode: SendRemainingBalance});
+            send(SendParameters{to: ctx.sender, value: 0, bounce: false, mode: SendRemainingBalance, body: emptyCell()}
+            );
             self.nftAddress = null;
             self.nftOwner = null;
             self.lockTime = 0;
