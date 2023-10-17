@@ -100,9 +100,9 @@ contract Task4 with Deployable {
             // let balance: Int = myBalance();
             // balance = balance - ton("0.05");
             send(SendParameters{to: self.nftAddress!!,
-                    value: ton("0.02"),
+                    value: 0,
                     bounce: false,
-                    mode: SendIgnoreErrors,
+                    mode: SendPayGasSeparately,
                     body: Transfer{queryId: msg.queryId,
                         newOwner: self.nftOwner!!,
                         responseDestination: self.nftOwner!!,
@@ -112,8 +112,7 @@ contract Task4 with Deployable {
                     }.toCell()
                 }
             );
-            send(SendParameters{to: ctx.sender, value: 0, bounce: false, mode: SendRemainingBalance, body: emptyCell()}
-            );
+            send(SendParameters{to: ctx.sender, value: 0, bounce: false, mode: SendRemainingBalance});
             self.nftAddress = null;
             self.nftOwner = null;
             self.lockTime = 0;
