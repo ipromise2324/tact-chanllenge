@@ -112,7 +112,13 @@ contract Task4 with Deployable {
                     }.toCell()
                 }
             );
-            send(SendParameters{to: ctx.sender, value: 0, bounce: true, mode: SendRemainingBalance});
+            send(SendParameters{to: ctx.sender,
+                    value: 0,
+                    bounce: false,
+                    mode: SendRemainingBalance,
+                    body: "Give NFT back to you".asComment()
+                }
+            );
             self.nftAddress = null;
             self.nftOwner = null;
             self.lockTime = 0;
