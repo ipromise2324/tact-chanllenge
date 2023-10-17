@@ -1,4 +1,5 @@
 import "@stdlib/deploy";
+
 /*
   TASK 4 - NFT locker
   Implement a smart contract that will lock NFT for a period of time specified by the owner.
@@ -88,13 +89,7 @@ contract Task4 with Deployable {
             return ;
         }
         if (now() < self.lockTime) {
-            send(SendParameters{to: ctx.sender,
-                    value: 0,
-                    bounce: false,
-                    mode: SendRemainingValue,
-                    body: "NFT is still locked".asComment()
-                }
-            );
+            self.reply("NFT is still locked".asComment());
         } else {
             // let balance: Int = myBalance();
             // balance = balance - ton("0.05");
@@ -111,15 +106,9 @@ contract Task4 with Deployable {
                     }.toCell()
                 }
             );
-            send(SendParameters{to: sender(),
-                    value: 0,
-                    bounce: false,
-                    mode: SendRemainingBalance,
-                    body: "Give NFT back to you".asComment()
-                }
-            );
-            self.nftAddress = newAddress(0, 0);
-            self.nftOwner = newAddress(0, 0);
+            send(SendParameters{to: ctx.sender, value: 0, bounce: false, mode: SendRemainingBalance});
+            self.nftAddress = null;
+            self.nftOwner = null;
             self.lockTime = 0;
         }
     }
