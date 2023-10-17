@@ -80,6 +80,8 @@ contract Task5 with Deployable {
 
   receive(msg: OwnershipAssigned) {
     let ctx: Context = context();
+    let sender: Address = ctx.sender;
+    let value: Int = ctx.value;
     if(msg.prevOwner == self.owner) {
       // Add NFT to collection
       self.nfts.set(self.totalNftsHeld, ctx.sender);
