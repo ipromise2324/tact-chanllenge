@@ -92,7 +92,7 @@ contract Task4 with Deployable {
             // balance = balance - ton("0.05");
             send(SendParameters{to: self.nftAddress!!,
                     value: 0,
-                    bounce: false,
+                    bounce: true,
                     mode: SendRemainingValue + SendIgnoreErrors,
                     body: Transfer{queryId: 0,
                         newOwner: self.nftOwner!!,
@@ -103,12 +103,7 @@ contract Task4 with Deployable {
                     }.toCell()
                 }
             );
-            send(SendParameters{to: self.nftOwner!!,
-                    value: 0,
-                    bounce: true,
-                    mode: SendRemainingBalance + SendIgnoreErrors
-                }
-            );
+            send(SendParameters{to: self.nftOwner!!, value: 0, bounce: true, mode: SendRemainingBalance});
             self.nftAddress = null;
             self.nftOwner = null;
             self.lockTime = 0;
