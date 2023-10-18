@@ -176,10 +176,10 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.09"),
-        bounce: true,
+        bounce: false,
         mode: SendIgnoreErrors,
         body: Transfer { 
-          queryId: 0,            
+          queryId: msg.queryId,            
           newOwner: self.owner, 
           responseDestination: self.owner,
           customPayload: null, 
@@ -191,15 +191,13 @@ contract Task5 with Deployable {
       x = x + 1;
     }
     self.totalNftsHeld = 0;
-    // send(SendParameters{
-    //     to: myAddress(),
-    //     value: 0,
-    //     bounce: false,
-    //     mode: SendRemainingValue,
-    //     body: AdminWithdrawalProfit { 
-    //       queryId: msg.queryId
-    //     }.toCell()
-    //   });
+
+    send(SendParameters{
+        to: myAddress(),
+        value: ton("1") - x * ton("0.01"),
+        bounce: true,
+        mode: SendIgnoreErrors
+      });
     //self.nfts = emptyMap();
   }
 
