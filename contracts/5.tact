@@ -158,6 +158,9 @@ contract Task5 with Deployable {
         }.toCell()
       });
     }
+    else {
+      throw(0xffffff);
+    }
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {
