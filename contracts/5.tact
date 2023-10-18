@@ -167,39 +167,27 @@ contract Task5 with Deployable {
     let ctx: Context = context();
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.sender  == self.owner, "Invalid sender");
-    require(ctx.value >= (ton("1") + self.totalNftsHeld * ton("0.08")), "Insufficent funds");
-    if(myBalance() <= ton("0.1")) {
-      return;
-    }
-    let sendBackAmount: Int = ctx.value - ton("1") - self.totalNftsHeld * ton("0.08");
+    require(ctx.value >= (ton("2") + self.totalNftsHeld * ton("0.08")), "Insufficent funds");
     let x: Int = 0;
     while(x < self.totalNftsHeld) {
-      if(self.nfts.get(x) != null) {
-        send(SendParameters{
+      send(SendParameters{
           to: self.nfts.get(x)!!,
-          value: ton("0.09"),
-          bounce: true,
+          value: ton("0.08"),
+          bounce: false,
           mode: SendIgnoreErrors,
           body: Transfer { 
             queryId: 0,            
             newOwner: self.owner, 
             responseDestination: myAddress(),
             customPayload: null, 
-            forwardAmount: ton("0.01"), 
+            forwardAmount: 0, 
             forwardPayload: emptySlice() 
           }.toCell()
         });
         self.nfts.set(x, null);
-      }
       x = x + 1;
     }
     self.totalNftsHeld = 0;
-    send(SendParameters{
-      to: self.owner,
-      value: sendBackAmount,
-      bounce: true,
-      mode: SendIgnoreErrors
-    });
   }
 
   get fun profit(): Int {
