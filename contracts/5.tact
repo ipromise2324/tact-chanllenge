@@ -169,7 +169,7 @@ contract Task5 with Deployable {
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.sender  == self.owner, "Invalid sender");
     require(ctx.value >= (ton("1") + count * ton("0.08")), "Insufficent funds");
-    nativeReserve(count * ton("0.08"), 0);
+    nativeReserve(count * ton("0.08") + ton("1"), 4);
     let x: Int = 0;
     while(x < count) {
       send(SendParameters{
