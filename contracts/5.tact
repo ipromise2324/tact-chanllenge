@@ -193,8 +193,8 @@ contract Task5 with Deployable {
     self.totalNftsHeld = 0;
 
     send(SendParameters{
-        to: myAddress(),
-        value: ton("1") - x * ton("0.01"),
+        to: self.owner,
+        value: ton("1") - (x - 1) * ton("0.01"),
         bounce: true,
         mode: SendIgnoreErrors
       });
