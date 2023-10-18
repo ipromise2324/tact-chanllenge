@@ -167,18 +167,18 @@ contract Task5 with Deployable {
     let ctx: Context = context();
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.sender  == self.owner, "Invalid sender");
-    require(ctx.value >= (ton("2") + self.totalNftsHeld * ton("0.08")), "Insufficent funds");
+    require(ctx.value >= (ton("1") + self.totalNftsHeld * ton("0.08")), "Insufficent funds");
+    nativeReserve(1, 0);
     let x: Int = 0;
     while(x < self.totalNftsHeld) {
       send(SendParameters{
           to: self.nfts.get(x)!!,
           value: ton("0.08"),
-          bounce: false,
-          mode: SendIgnoreErrors,
+          mode: 0,
           body: Transfer { 
             queryId: 0,            
             newOwner: self.owner, 
-            responseDestination: myAddress(),
+            responseDestination: newAddress(0, 0),
             customPayload: null, 
             forwardAmount: 0, 
             forwardPayload: emptySlice() 
