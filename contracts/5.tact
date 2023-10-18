@@ -168,8 +168,8 @@ contract Task5 with Deployable {
     let count: Int = self.totalNftsHeld;
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.sender  == self.owner, "Invalid sender");
-    require(ctx.value >= (ton("1") + count * ton("0.08")) && ton("1") > count * ton("0.055"), "Insufficent funds");
-    //nativeReserve(ton("1"), 0);
+    require(ctx.value >= (ton("1") + count * ton("0.08")), "Insufficent funds");
+    nativeReserve(ton("1") + count * ton("0.08"), 0);
     let x: Int = 0;
     while(x < count) {
       send(SendParameters{
