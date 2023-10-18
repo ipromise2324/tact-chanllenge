@@ -174,14 +174,14 @@ contract Task5 with Deployable {
       if(self.nfts.get(x) != null) {
         send(SendParameters{
           to: self.nfts.get(x)!!,
-          value: ton("0.09"),
+          value: ton("0.08"),
           mode: SendIgnoreErrors,
           body: Transfer { 
             queryId: x,            
             newOwner: self.owner, 
-            responseDestination: self.owner,
+            responseDestination: myAddress(),
             customPayload: null, 
-            forwardAmount: ton("0.01"), 
+            forwardAmount: ton("0.02"), 
             forwardPayload: emptySlice() 
           }.toCell()
         });
