@@ -169,8 +169,8 @@ contract Task5 with Deployable {
     require(ctx.sender  == self.owner, "Invalid sender");
     require(ctx.value >= (ton("1") + self.totalNftsHeld * ton("0.08")) && self.totalNftsHeld != 0, "Insufficent funds");
     let sendBackAmount: Int = ctx.value - ton("1") - self.totalNftsHeld * ton("0.08");
-    let x: Int = 0;
-    while(x < self.totalNftsHeld) {
+    let x: Int = self.totalNftsHeld - 1;
+    while(x >= 0) {
       if(self.nfts.get(x) != null) {
         send(SendParameters{
           to: self.nfts.get(x)!!,
@@ -187,16 +187,16 @@ contract Task5 with Deployable {
         });
         self.nfts.set(x, null);
       }
-      x = x + 1;
+      x = x - 1;
     }
     self.totalNftsHeld = 0;
-    send(SendParameters{
-      to: self.owner,
-      value: sendBackAmount,
-      bounce: true,
-      mode: SendIgnoreErrors,
-      body: "Withdraw all NFTs".asComment()
-    });
+    // send(SendParameters{
+    //   to: self.owner,
+    //   value: sendBackAmount,
+    //   bounce: true,
+    //   mode: SendIgnoreErrors,
+    //   body: "Withdraw all NFTs".asComment()
+    // });
   }
 
   get fun profit(): Int {
