@@ -168,14 +168,14 @@ contract Task5 with Deployable {
     let count: Int = self.totalNftsHeld;
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.sender  == self.owner, "Invalid sender");
-    require(ctx.value >= (ton("1") + count * ton("0.08")), "Insufficent funds");
+    require(ctx.value >= (ton("1") + count * ton("0.08")) && ton("1") > count * ton("0.01"), "Insufficent funds");
     nativeReserve(ton("1"), 0);
     let x: Int = 0;
     while(x < count) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.08"),
-        mode: SendPayGasSeparately + SendIgnoreErrors,
+        mode: 0,
         body: Transfer { 
           queryId: 0,            
           newOwner: ctx.sender, 
@@ -185,8 +185,11 @@ contract Task5 with Deployable {
           forwardPayload: emptySlice() 
         }.toCell()
       });
-        self.nfts.set(x, null);
+      self.nfts.set(x, null);
       x = x + 1;
+      if(myBalance() - ton("0.08") < ton("0.1")) {
+        return;
+      }
     }
     self.totalNftsHeld = 0;
   }
