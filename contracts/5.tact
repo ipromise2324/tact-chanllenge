@@ -80,8 +80,6 @@ contract Task5 with Deployable {
 
   receive(msg: OwnershipAssigned) {
     let ctx: Context = context();
-    let sender: Address = ctx.sender;
-    let value: Int = ctx.value;
     if(msg.prevOwner == self.owner) {
       // Add NFT to collection
       self.nfts.set(self.totalNftsHeld, ctx.sender);
@@ -90,11 +88,6 @@ contract Task5 with Deployable {
     }
 
     if(ctx.value < ton("2.1")) {
-      // TODO: but only in case that TON attached is enough to process refund without losing TONs on the SC's balance
-      // use if(ctx.value >= ton("0.02"))
-      if(ctx.value < ton("0.01")) {
-        return;
-        }
       // Send NFT back
       send(SendParameters{
           to: ctx.sender,
@@ -102,7 +95,7 @@ contract Task5 with Deployable {
           bounce: false,
           mode: SendRemainingValue,
           body: Transfer { 
-            queryId: 0,            
+            queryId: msg.queryId,            
             newOwner: msg.prevOwner, 
             responseDestination: msg.prevOwner, 
             customPayload: null, 
@@ -120,11 +113,11 @@ contract Task5 with Deployable {
         to: ctx.sender,
         value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
         bounce: false,
-        mode: 0,
+        mode: SendIgnoreErrors,
         body: Transfer { 
-          queryId: 0,            
+          queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
-          responseDestination: msg.prevOwner, 
+          responseDestination: myAddress(), 
           customPayload: null, 
           forwardAmount: 0, 
           forwardPayload: emptySlice() 
@@ -136,9 +129,9 @@ contract Task5 with Deployable {
         to: self.nfts.get(rndIdx)!!,
         value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
         bounce: false,
-        mode: 0,
+        mode: SendIgnoreErrors,
         body: Transfer { 
-          queryId: 0,            
+          queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
           responseDestination: msg.prevOwner, 
           customPayload: null, 
@@ -158,8 +151,8 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.owner,
         value: myBalance() - ton("0.1"),
-        bounce: false,
-        mode: 0,
+        bounce: true,
+        mode: SendIgnoreErrors,
         body: AdminFetchProfit { 
           queryId: 0
         }.toCell()
@@ -170,7 +163,7 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalAllNFTs) {
     let ctx: Context = context();
     // 1 = 0.01 * 100 -> maybe forward ton amount
-    require(ctx.value >= ton("1") + self.totalNftsHeld * ton("0.08"), "Insufficent funds");
+    require(ctx.value >= (ton("1") + self.totalNftsHeld * ton("0.08")), "Insufficent funds");
     require(ctx.sender  == self.owner, "Invalid sender");
     let x: Int = 0;
     while(x < self.totalNftsHeld) {
@@ -178,7 +171,7 @@ contract Task5 with Deployable {
         to: self.nfts.get(x)!!,
         value: ton("0.08"),
         bounce: false,
-        mode: 0,
+        mode: SendIgnoreErrors,
         body: Transfer { 
           queryId: 0,            
           newOwner: self.owner, 
