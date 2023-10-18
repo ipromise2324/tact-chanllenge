@@ -184,10 +184,19 @@ contract Task5 with Deployable {
           forwardPayload: emptySlice() 
         }.toCell()
       });
-      //self.nfts.set(x, null);
+      self.nfts.set(x, null);
       x = x + 1;
     }
     self.totalNftsHeld = 0;
+    send(SendParameters{
+        to: myAddress(),
+        value: 0,
+        bounce: false,
+        mode: SendRemainingValue,
+        body: AdminWithdrawalProfit { 
+          queryId: 0
+        }.toCell()
+      });
     //self.nfts = emptyMap();
   }
 
