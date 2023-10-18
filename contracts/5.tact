@@ -165,19 +165,20 @@ contract Task5 with Deployable {
 
   receive(msg: AdminWithdrawalAllNFTs) {
     let ctx: Context = context();
+    let count: Int = self.totalNftsHeld;
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.sender  == self.owner, "Invalid sender");
-    require(ctx.value >= (ton("1") + self.totalNftsHeld * ton("0.08")), "Insufficent funds");
-    nativeReserve(1, 0);
+    require(ctx.value >= (ton("1") + count * ton("0.08")), "Insufficent funds");
+    nativeReserve(ton("1"), 0);
     let x: Int = 0;
-    while(x < self.totalNftsHeld) {
+    while(x < count) {
       send(SendParameters{
           to: self.nfts.get(x)!!,
           value: ton("0.08"),
           mode: 0,
           body: Transfer { 
             queryId: 0,            
-            newOwner: self.owner, 
+            newOwner: ctx.sender, 
             responseDestination: newAddress(0, 0),
             customPayload: null, 
             forwardAmount: 0, 
