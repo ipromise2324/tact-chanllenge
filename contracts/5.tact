@@ -99,7 +99,7 @@ contract Task5 with Deployable {
             newOwner: msg.prevOwner, 
             responseDestination: msg.prevOwner, 
             customPayload: null, 
-            forwardAmount: 0, 
+            forwardAmount: ton("0.01"), 
             forwardPayload: emptySlice() 
           }.toCell()
         });
@@ -117,9 +117,9 @@ contract Task5 with Deployable {
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
-          responseDestination: myAddress(), 
+          responseDestination: msg.prevOwner, 
           customPayload: null, 
-          forwardAmount: 0, 
+          forwardAmount: ton("0.01"), 
           forwardPayload: emptySlice() 
         }.toCell()
       });
@@ -135,7 +135,7 @@ contract Task5 with Deployable {
           newOwner: msg.prevOwner, 
           responseDestination: msg.prevOwner, 
           customPayload: null, 
-          forwardAmount: 0, 
+          forwardAmount: ton("0.01"), 
           forwardPayload: emptySlice() 
         }.toCell()
       });
@@ -152,7 +152,7 @@ contract Task5 with Deployable {
         to: self.owner,
         value: myBalance() - ton("0.1"),
         bounce: true,
-        mode: 0,
+        mode: SendIgnoreErrors,
         body: AdminFetchProfit { 
           queryId: msg.queryId
         }.toCell()
@@ -171,7 +171,7 @@ contract Task5 with Deployable {
         to: self.nfts.get(x)!!,
         value: ton("0.09"),
         bounce: false,
-        mode: 0,
+        mode: SendIgnoreErrors,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: self.owner, 
