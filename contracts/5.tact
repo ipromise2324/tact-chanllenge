@@ -178,7 +178,7 @@ contract Task5 with Deployable {
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: self.owner, 
-          responseDestination: myAddress(),
+          responseDestination: self.owner,
           customPayload: null, 
           forwardAmount: ton("0.01"), 
           forwardPayload: emptySlice() 
