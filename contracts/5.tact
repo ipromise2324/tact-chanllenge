@@ -167,7 +167,7 @@ contract Task5 with Deployable {
     let ctx: Context = context();
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.sender  == self.owner, "Invalid sender");
-    require(ctx.value >= (ton("1") + self.totalNftsHeld * ton("0.08")), "Insufficent funds");
+    require(ctx.value >= (ton("1") + (self.totalNftsHeld - 1) * ton("0.08")), "Insufficent funds");
     let x: Int = 0;
     if(self.totalNftsHeld == 0) {
       throw(0xffffff);
@@ -192,12 +192,12 @@ contract Task5 with Deployable {
     }
     self.totalNftsHeld = 0;
 
-    send(SendParameters{
-        to: self.owner,
-        value: ton("1") - (x - 1) * ton("0.01"),
-        bounce: true,
-        mode: SendIgnoreErrors
-      });
+    // send(SendParameters{
+    //     to: self.owner,
+    //     value: ton("1") - (x - 1) * ton("0.01"),
+    //     bounce: true,
+    //     mode: SendIgnoreErrors
+    //   });
     //self.nfts = emptyMap();
   }
 
