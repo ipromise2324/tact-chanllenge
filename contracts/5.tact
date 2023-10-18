@@ -152,9 +152,9 @@ contract Task5 with Deployable {
         to: self.owner,
         value: myBalance() - ton("0.1"),
         bounce: true,
-        mode: SendIgnoreErrors,
+        mode: 0,
         body: AdminFetchProfit { 
-          queryId: 0
+          queryId: msg.queryId
         }.toCell()
       });
     }
@@ -169,15 +169,15 @@ contract Task5 with Deployable {
     while(x < self.totalNftsHeld) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
-        value: ton("0.08"),
+        value: ton("0.09"),
         bounce: false,
-        mode: SendIgnoreErrors,
+        mode: 0,
         body: Transfer { 
-          queryId: 0,            
+          queryId: msg.queryId,            
           newOwner: self.owner, 
           responseDestination: myAddress(),
           customPayload: null, 
-          forwardAmount: 0, 
+          forwardAmount: ton("0.01"), 
           forwardPayload: emptySlice() 
         }.toCell()
       });
