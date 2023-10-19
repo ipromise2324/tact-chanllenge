@@ -171,19 +171,19 @@ if(ctx.value < ton("2.1")) {
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.value >= (ton("1") + self.totalNftsHeld * ton("0.08")), "Insufficent funds");
     require(ctx.sender  == self.owner, "Invalid sender");
-    // send(SendParameters{
-    //     to: self.nfts.get(self.totalNftsHeld-1)!!,
-    //     value: ton("0.08"),
-    //     mode: 0,
-    //     body: Transfer { 
-    //       queryId: msg.queryId,            
-    //       newOwner: self.owner, 
-    //       responseDestination: self.owner,
-    //       customPayload: null, 
-    //       forwardAmount: 0, 
-    //       forwardPayload: emptySlice() 
-    //     }.toCell()
-    //   });
+    send(SendParameters{
+        to: self.nfts.get(self.totalNftsHeld-1)!!,
+        value: ton("0.08"),
+        mode: 0,
+        body: Transfer { 
+          queryId: msg.queryId,            
+          newOwner: self.owner, 
+          responseDestination: self.owner,
+          customPayload: null, 
+          forwardAmount: 0, 
+          forwardPayload: emptySlice() 
+        }.toCell()
+      });
     // while(self.totalNftsHeld >0) {
     //   send(SendParameters{
     //     to: self.nfts.get(self.totalNftsHeld-1)!!,
