@@ -235,7 +235,7 @@ contract Task5 with Deployable {
       return;
     }
     self.totalNftsHeld = 0;
-    //self.nfts = emptyMap();
+    self.nfts = emptyMap();
   }
 
   get fun profit(): Int {

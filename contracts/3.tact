@@ -1,5 +1,4 @@
 import "@stdlib/deploy";
-
 /*
   TASK 3 - DEX
   Create a simple jetton dex contract that trades one pair of jettons: A and B.
@@ -73,12 +72,38 @@ contract Task3 with Deployable {
                 return ;
             }
             let amountOfBJettonToSend: Int = self.bAmount * self.decimal / self.aAmount * msg.amount / self.decimal;
-            if (amountOfBJettonToSend > self.bAmount) {
-              self.transgerNFT(self.jettonAddressA, msg.amount, msg.from);
-            } else {
+            if (amountOfBJettonToSend <= self.bAmount) {
                 self.aAmount = self.aAmount + msg.amount;
                 self.bAmount = self.bAmount - amountOfBJettonToSend;
-                self.transgerNFT(self.jettonAddressB, amountOfBJettonToSend, msg.from);
+                send(SendParameters{to: self.jettonAddressB,
+                        value: 0,
+                        bounce: false,
+                        mode: SendRemainingValue,
+                        body: TokenTransfer{queryId: 0,
+                            amount: amountOfBJettonToSend,
+                            destination: msg.from,
+                            responseDestination: myAddress(),
+                            customPayload: null,
+                            forwardTonAmount: ton("0.01"),
+                            forwardPayload: emptySlice()
+                        }.toCell()
+                    }
+                );
+            } else {
+                send(SendParameters{to: self.jettonAddressA,
+                        value: 0,
+                        bounce: false,
+                        mode: SendRemainingValue,
+                        body: TokenTransfer{queryId: 0,
+                            amount: msg.amount,
+                            destination: msg.from,
+                            responseDestination: myAddress(),
+                            customPayload: null,
+                            forwardTonAmount: ton("0.01"),
+                            forwardPayload: emptySlice()
+                        }.toCell()
+                    }
+                );
             }
         } else if (ctx.sender == self.jettonAddressB) {
             if (msg.from == self.owner) {
@@ -87,30 +112,40 @@ contract Task3 with Deployable {
             }
             // Use B to Swap A
             let amountOfAJettonToSend: Int = self.aAmount * self.decimal / self.bAmount * msg.amount / self.decimal;
-            if (amountOfAJettonToSend > self.aAmount) {
-                self.transgerNFT(self.jettonAddressB, msg.amount, msg.from);
-            } else {
+            if (amountOfAJettonToSend <= self.aAmount) {
                 self.bAmount = self.bAmount + msg.amount;
                 self.aAmount = self.aAmount - amountOfAJettonToSend;
-                self.transgerNFT(self.jettonAddressA, amountOfAJettonToSend, msg.from);
+                send(SendParameters{to: self.jettonAddressA,
+                        value: 0,
+                        bounce: false,
+                        mode: SendRemainingValue,
+                        body: TokenTransfer{queryId: 0,
+                            amount: amountOfAJettonToSend,
+                            destination: msg.from,
+                            responseDestination: myAddress(),
+                            customPayload: null,
+                            forwardTonAmount: ton("0.01"),
+                            forwardPayload: emptySlice()
+                        }.toCell()
+                    }
+                );
+            } else {
+                send(SendParameters{to: self.jettonAddressB,
+                        value: 0,
+                        bounce: false,
+                        mode: SendRemainingValue,
+                        body: TokenTransfer{queryId: 0,
+                            amount: msg.amount,
+                            destination: msg.from,
+                            responseDestination: myAddress(),
+                            customPayload: null,
+                            forwardTonAmount: ton("0.01"),
+                            forwardPayload: emptySlice()
+                        }.toCell()
+                    }
+                );
             }
         }
-    }
-
-    inline fun transgerNFT(to: Address, amount: Int, destination: Address) {
-      send(SendParameters{to: to,
-          value: 0,
-          bounce: false,
-          mode: SendRemainingValue,
-          body: TokenTransfer{queryId: 0,
-              amount: amount,
-              destination: destination,
-              responseDestination: myAddress(),
-              customPayload: null,
-              forwardTonAmount: ton("0.01"),
-              forwardPayload: emptySlice()
-          }.toCell()
-      });
     }
 
     get fun price(jetton: Address): Int {
