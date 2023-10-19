@@ -70,7 +70,7 @@ contract Task3 with Deployable {
 
   receive(msg: TokenNotification) {
     let ctx: Context = context();
-    if (msg.from == self.owner && ctx.sender == self.jettonAddressA) {
+    if (msg.from == self.owner) {
         if(ctx.sender == self.jettonAddressA) {
             self.aAmount = self.aAmount + msg.amount;
         }
@@ -87,7 +87,7 @@ contract Task3 with Deployable {
             customPayload: null,
             forwardTonAmount: ton("0.01"),
             forwardPayload: emptySlice()
-          }.toCell();
+          }.toCell()
     if (ctx.sender == self.jettonAddressA) {
       // Use A to Swap B
 
@@ -130,7 +130,6 @@ contract Task3 with Deployable {
           bounce: false,
           mode: 64,
           body: tra
-        });
       } else {
         self.bAmount = self.bAmount + msg.amount;
         self.aAmount = self.aAmount - amountOfAJettonToSend;
