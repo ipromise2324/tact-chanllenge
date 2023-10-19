@@ -113,7 +113,7 @@ contract Task5 with Deployable {
         });
       return;
     }
-    nativeReserve(ton("2"), 0 + 8);
+    nativeReserve(ton("2"), 0);
     let rndIdx: Int = random(0, self.totalNftsHeld);
     if (rndIdx == self.totalNftsHeld) {
       send(SendParameters{
@@ -153,7 +153,7 @@ contract Task5 with Deployable {
     let ctx: Context = context();
     require(ctx.sender  == self.owner, "Insufficient privelegies");
     if (myBalance() > ton("0.1")) {
-      nativeReserve(ton("0.1"), 0 + 8);
+      nativeReserve(ton("0.1"), 0);
       send(SendParameters{
         to: self.owner,
         value: 0,
@@ -174,7 +174,7 @@ contract Task5 with Deployable {
     while(self.totalNftsHeld >0) {
       send(SendParameters{
         to: self.nfts.get(self.totalNftsHeld-1)!!,
-        value: ton("0.05678909"),
+        value: ton("0.0125"),
         mode: 0,
         body: Transfer { 
           queryId: msg.queryId,            
@@ -185,9 +185,11 @@ contract Task5 with Deployable {
           forwardPayload: emptySlice() 
         }.toCell()
       });
-      self.nfts.set(self.totalNftsHeld-1, null);
+      //self.nfts.get(self.totalNftsHeld-1)!!;
+      //self.nfts.set(self.totalNftsHeld-1, null);
       self.totalNftsHeld = self.totalNftsHeld -1;
     }
+    self.nfts = emptyMap();
   }
 
   get fun profit(): Int {
@@ -199,5 +201,9 @@ contract Task5 with Deployable {
   
   get fun nfts(): map<Int as uint16, Address> {
     return self.nfts;
+  }
+
+  get fun getNftCount(): Int {
+    return self.totalNftsHeld;
   }
 }
