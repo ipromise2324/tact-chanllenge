@@ -74,37 +74,11 @@ contract Task3 with Deployable {
             }
             let amountOfBJettonToSend: Int = self.bAmount * self.decimal / self.aAmount * msg.amount / self.decimal;
             if (amountOfBJettonToSend > self.bAmount) {
-                send(SendParameters{to: self.jettonAddressA,
-                        value: 0,
-                        bounce: false,
-                        mode: SendRemainingValue,
-                        body: TokenTransfer{queryId: 0,
-                            amount: msg.amount,
-                            destination: msg.from,
-                            responseDestination: myAddress(),
-                            customPayload: null,
-                            forwardTonAmount: ton("0.01"),
-                            forwardPayload: emptySlice()
-                        }.toCell()
-                    }
-                );
+              self.transgerNFT(self.jettonAddressA, msg.amount, msg.from);
             } else {
                 self.aAmount = self.aAmount + msg.amount;
                 self.bAmount = self.bAmount - amountOfBJettonToSend;
-                send(SendParameters{to: self.jettonAddressB,
-                        value: 0,
-                        bounce: false,
-                        mode: SendRemainingValue,
-                        body: TokenTransfer{queryId: 0,
-                            amount: amountOfBJettonToSend,
-                            destination: msg.from,
-                            responseDestination: myAddress(),
-                            customPayload: null,
-                            forwardTonAmount: ton("0.01"),
-                            forwardPayload: emptySlice()
-                        }.toCell()
-                    }
-                );
+                self.transgerNFT(self.jettonAddressB, amountOfBJettonToSend, msg.from);
             }
         } else if (ctx.sender == self.jettonAddressB) {
             if (msg.from == self.owner) {
@@ -114,39 +88,29 @@ contract Task3 with Deployable {
             // Use B to Swap A
             let amountOfAJettonToSend: Int = self.aAmount * self.decimal / self.bAmount * msg.amount / self.decimal;
             if (amountOfAJettonToSend > self.aAmount) {
-                send(SendParameters{to: self.jettonAddressB,
-                        value: 0,
-                        bounce: false,
-                        mode: SendRemainingValue,
-                        body: TokenTransfer{queryId: 0,
-                            amount: msg.amount,
-                            destination: msg.from,
-                            responseDestination: myAddress(),
-                            customPayload: null,
-                            forwardTonAmount: ton("0.01"),
-                            forwardPayload: emptySlice()
-                        }.toCell()
-                    }
-                );
+                self.transgerNFT(self.jettonAddressB, msg.amount, msg.from);
             } else {
                 self.bAmount = self.bAmount + msg.amount;
                 self.aAmount = self.aAmount - amountOfAJettonToSend;
-                send(SendParameters{to: self.jettonAddressA,
-                        value: 0,
-                        bounce: false,
-                        mode: SendRemainingValue,
-                        body: TokenTransfer{queryId: 0,
-                            amount: amountOfAJettonToSend,
-                            destination: msg.from,
-                            responseDestination: myAddress(),
-                            customPayload: null,
-                            forwardTonAmount: ton("0.01"),
-                            forwardPayload: emptySlice()
-                        }.toCell()
-                    }
-                );
+                self.transgerNFT(self.jettonAddressA, amountOfAJettonToSend, msg.from);
             }
         }
+    }
+
+    inline fun transgerNFT(to: Address, amount: Int, destination: Address) {
+      send(SendParameters{to: to,
+          value: 0,
+          bounce: false,
+          mode: SendRemainingValue,
+          body: TokenTransfer{queryId: 0,
+              amount: amount,
+              destination: destination,
+              responseDestination: myAddress(),
+              customPayload: null,
+              forwardTonAmount: ton("0.01"),
+              forwardPayload: emptySlice()
+          }.toCell()
+      });
     }
 
     get fun price(jetton: Address): Int {

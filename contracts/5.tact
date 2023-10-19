@@ -37,7 +37,7 @@ import "@stdlib/deploy";
      the order of NFTs in this dictionary doesn't matter
 */
 
-const SPLIT_THRESHOLD: Int = 95;
+const SPLIT_THRESHOLD: Int = 93;
 
 message AdminWithdrawalProfit {
   queryId: Int as uint64;

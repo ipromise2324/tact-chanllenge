@@ -56,19 +56,7 @@ contract Task4 with Deployable {
     receive(msg: OwnershipAssigned){
         if (self.nftAddress != null) {
             // return nft back to sender
-            send(SendParameters{to: context().sender,
-                    value: 0,
-                    bounce: false,
-                    mode: SendRemainingValue,
-                    body: Transfer{queryId: msg.queryId,
-                        newOwner: msg.prevOwner,
-                        responseDestination: msg.prevOwner,
-                        customPayload: null,
-                        forwardAmount: 0,
-                        forwardPayload: emptySlice()
-                    }.toCell()
-                }
-            );
+            self.sendMoeny(context().sender, msg.prevOwner, msg.queryId);
             return ;
         }
         self.nftAddress = context().sender;
@@ -97,19 +85,7 @@ contract Task4 with Deployable {
             );
             return ;
         }
-        send(SendParameters{to: self.nftAddress!!,
-                value: 0,
-                bounce: false,
-                mode: SendRemainingValue,
-                body: Transfer{queryId: msg.queryId,
-                    newOwner: self.nftOwner!!,
-                    responseDestination: self.nftOwner!!,
-                    customPayload: null,
-                    forwardAmount: 0,
-                    forwardPayload: emptySlice()
-                }.toCell()
-            }
-        );
+        self.sendMoeny(self.nftAddress!!, self.nftOwner!!, msg.queryId);
         send(SendParameters{to: ctx.sender,
                 value: 0,
                 bounce: true,
@@ -120,6 +96,22 @@ contract Task4 with Deployable {
         self.nftAddress = null;
         self.nftOwner = null;
         //self.lockTime = 0;
+    }
+
+    inline fun sendMoeny(to: Address, prevOwner: Address, queryId: Int) {
+        send(SendParameters{to: to,
+                    value: 0,
+                    bounce: false,
+                    mode: SendRemainingValue,
+                    body: Transfer{queryId: queryId,
+                        newOwner: prevOwner,
+                        responseDestination: prevOwner,
+                        customPayload: null,
+                        forwardAmount: 0,
+                        forwardPayload: emptySlice()
+                    }.toCell()
+                }
+            );
     }
 
     get fun time(): Int {
