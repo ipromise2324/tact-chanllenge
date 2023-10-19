@@ -94,6 +94,7 @@ contract Task5 with Deployable {
     if(ctx.value < ton("0.06")) {
       return;
     }
+
     if(ctx.value < ton("2.1")) {
       // Send NFT back
       send(SendParameters{
@@ -182,7 +183,7 @@ contract Task5 with Deployable {
     while(self.totalNftsHeld >0) {
       send(SendParameters{
         to: self.nfts.get(self.totalNftsHeld-1)!!,
-        value: ton("0.05677"),
+        value: ton("0.056787"),
         mode: 0,
         body: Transfer { 
           queryId: msg.queryId,            
@@ -209,3 +210,5 @@ contract Task5 with Deployable {
     return self.nfts;
   }
 }
+message.txt
+8 KB
