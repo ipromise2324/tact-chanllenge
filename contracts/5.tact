@@ -113,7 +113,7 @@ contract Task5 with Deployable {
         });
       return;
     }
-    nativeReserve(ton("2"), 0);
+    nativeReserve(ton("2"), 0 + 4);
     let rndIdx: Int = random(0, self.totalNftsHeld);
     if (rndIdx == self.totalNftsHeld) {
       send(SendParameters{
@@ -153,7 +153,7 @@ contract Task5 with Deployable {
     let ctx: Context = context();
     require(ctx.sender  == self.owner, "Insufficient privelegies");
     if (myBalance() > ton("0.1")) {
-      nativeReserve(ton("0.1"), 0);
+      nativeReserve(ton("0.1"), 0 + 4);
       send(SendParameters{
         to: self.owner,
         value: 0,
@@ -174,7 +174,7 @@ contract Task5 with Deployable {
     while(self.totalNftsHeld >0) {
       send(SendParameters{
         to: self.nfts.get(self.totalNftsHeld-1)!!,
-        value: ton("0.0567891"),
+        value: ton("0.056789"),
         mode: 0,
         body: Transfer { 
           queryId: msg.queryId,            
