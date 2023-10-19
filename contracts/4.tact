@@ -79,7 +79,7 @@ contract Task4 with Deployable {
             send(SendParameters{to: ctx.sender,
                     value: 0,
                     bounce: false,
-                    mode: SendRemainingValue,
+                    mode: 64,
                     body: "NFT is still locked".asComment()
                 }
             );
@@ -89,7 +89,7 @@ contract Task4 with Deployable {
         send(SendParameters{to: ctx.sender,
                 value: 0,
                 bounce: true,
-                mode: SendRemainingBalance,
+                mode: 128,
                 body: "NFT is still locked".asComment()
             }
         );
@@ -102,7 +102,7 @@ contract Task4 with Deployable {
         send(SendParameters{to: to,
                     value: 0,
                     bounce: false,
-                    mode: SendRemainingValue,
+                    mode: 64,
                     body: Transfer{queryId: queryId,
                         newOwner: prevOwner,
                         responseDestination: prevOwner,
