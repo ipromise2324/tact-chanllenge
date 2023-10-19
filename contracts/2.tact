@@ -26,25 +26,26 @@ contract Task2 with Deployable {
 
     receive(msg: Refund){
         if (sender() == self.admin) {
-            self.forward(
-            msg.sender,
-            null,
-            true,
-            null
-        );
+        let out: Cell = beginCell().
+            .storeUint(0x18, 6)
+            .storeAddress(msg.sender)
+            .storeCoins(0)
+            .storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+            .endCell();
+            nativeSendMsg(out, 64);
         } else {
             throw(0xffffff);
         }
     }
 
     receive(msg: Slice){
-        self.forward(self.admin, beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell(), false, null);
-        // send(SendParameters{to: self.admin,
-        //         value: 0,
-        //         bounce: false,
-        //         mode: 64,
-        //         body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
-        //     }
-        // );
+        let out: Cell = beginCell().
+            .storeUint(0x18, 6)
+            .storeAddress(self.admin)
+            .storeCoins(0)
+            .storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+            .storeRef(beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell())
+            .endCell();
+        nativeSendMsg(out, 64);
     }
 }
