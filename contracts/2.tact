@@ -1,5 +1,4 @@
 import "@stdlib/deploy";
-
 /*
   TASK 2 - Proxy 
   Create a contract that forwards all received TONs
@@ -25,7 +24,7 @@ contract Task2 with Deployable {
     }
 
     receive(msg: Refund){
-        if (context().sender == self.admin) {
+        if (sender() == self.admin) {
             send(SendParameters{to: msg.sender, value: 0, mode: SendRemainingValue});
         } else {
             throw(0xffffff);
@@ -36,7 +35,7 @@ contract Task2 with Deployable {
         send(SendParameters{to: self.admin,
                 value: 0,
                 mode: SendRemainingValue,
-                body: beginCell().storeAddress(context().sender).storeRef(msg.asCell()).endCell()
+                body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
             }
         );
     }
