@@ -66,9 +66,7 @@ contract Task3 with Deployable {
 
     receive(msg: TokenNotification){
         let ctx: Context = context();
-        let jb: Address = self.jettonAddressB;
-        let ja: Address = self.jettonAddressA;
-        if (ctx.sender == ja) {
+        if (ctx.sender == self.jettonAddressA) {
             // Use A to Swap B
             if (msg.from == self.owner) {
                 self.aAmount = self.aAmount + msg.amount;
@@ -76,7 +74,7 @@ contract Task3 with Deployable {
             }
             let amountOfBJettonToSend: Int = self.bAmount * self.decimal / self.aAmount * msg.amount / self.decimal;
             if (amountOfBJettonToSend > self.bAmount) {
-                send(SendParameters{to: ja,
+                send(SendParameters{to: self.jettonAddressA,
                         value: 0,
                         bounce: false,
                         mode: SendRemainingValue,
@@ -93,7 +91,7 @@ contract Task3 with Deployable {
             } else {
                 self.aAmount = self.aAmount + msg.amount;
                 self.bAmount = self.bAmount - amountOfBJettonToSend;
-                send(SendParameters{to: jb,
+                send(SendParameters{to: self.jettonAddressB,
                         value: 0,
                         bounce: false,
                         mode: SendRemainingValue,
@@ -108,7 +106,7 @@ contract Task3 with Deployable {
                     }
                 );
             }
-        } else if (ctx.sender == jb) {
+        } else if (ctx.sender == self.jettonAddressB) {
             if (msg.from == self.owner) {
                 self.bAmount = self.bAmount + msg.amount;
                 return ;
@@ -116,7 +114,7 @@ contract Task3 with Deployable {
             // Use B to Swap A
             let amountOfAJettonToSend: Int = self.aAmount * self.decimal / self.bAmount * msg.amount / self.decimal;
             if (amountOfAJettonToSend > self.aAmount) {
-                send(SendParameters{to: jb,
+                send(SendParameters{to: self.jettonAddressB,
                         value: 0,
                         bounce: false,
                         mode: SendRemainingValue,
@@ -133,7 +131,7 @@ contract Task3 with Deployable {
             } else {
                 self.bAmount = self.bAmount + msg.amount;
                 self.aAmount = self.aAmount - amountOfAJettonToSend;
-                send(SendParameters{to: ja,
+                send(SendParameters{to: self.jettonAddressA,
                         value: 0,
                         bounce: false,
                         mode: SendRemainingValue,
@@ -148,10 +146,6 @@ contract Task3 with Deployable {
                     }
                 );
             }
-        } else {
-            // received a different jetton (neither A nor B), throw an error
-
-            throw(0xffffff);
         }
     }
 

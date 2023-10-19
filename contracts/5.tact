@@ -37,6 +37,7 @@ import "@stdlib/deploy";
      the order of NFTs in this dictionary doesn't matter
 */
 
+const SPLIT_THRESHOLD: Int = 95;
 
 message AdminWithdrawalProfit {
   queryId: Int as uint64;
@@ -72,7 +73,6 @@ message(0x5fcc3d14) Transfer {
     forwardPayload: Slice as remaining; 
 }
 
-const SPLIT_THRESHOLD: Int = 93;
 
 contract Task5 with Deployable {
   seed: Int as uint128;
