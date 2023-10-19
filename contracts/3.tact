@@ -70,20 +70,16 @@ contract Task3 with Deployable {
 
   receive(msg: TokenNotification) {
     let ctx: Context = context();
-    if (ctx.sender == self.jettonAddressA) {
-      // Use A to Swap B
-      if (msg.from == self.owner) {
-        self.aAmount = self.aAmount + msg.amount;
+    if (msg.from == self.owner && ctx.sender == self.jettonAddressA) {
+        if(ctx.sender == self.jettonAddressA) {
+            self.aAmount = self.aAmount + msg.amount;
+        }
+        else if(ctx.sender == self.jettonAddressB) {
+            self.bAmount = self.bAmount + msg.amount;
+        }
         return;
-      }
-      let amountOfBJettonToSend: Int = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
-      if (amountOfBJettonToSend > self.bAmount) {
-        send(SendParameters{
-          to: self.jettonAddressA,
-          value: 0,
-          bounce: false,
-          mode: 64,
-          body: TokenTransfer{
+    }
+    let tra: Cell = TokenTransfer{
             queryId: 0,
             amount: msg.amount,
             destination: msg.from,
@@ -91,7 +87,18 @@ contract Task3 with Deployable {
             customPayload: null,
             forwardTonAmount: ton("0.01"),
             forwardPayload: emptySlice()
-          }.toCell()
+          }.toCell();
+    if (ctx.sender == self.jettonAddressA) {
+      // Use A to Swap B
+
+      let amountOfBJettonToSend: Int = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
+      if (amountOfBJettonToSend > self.bAmount) {
+        send(SendParameters{
+          to: self.jettonAddressA,
+          value: 0,
+          bounce: false,
+          mode: 64,
+          body: tra
         });
       } else {
         self.aAmount = self.aAmount + msg.amount;
@@ -113,10 +120,7 @@ contract Task3 with Deployable {
         });
       }
     } else if (ctx.sender == self.jettonAddressB) {
-      if (msg.from == self.owner) {
-        self.bAmount = self.bAmount + msg.amount;
-        return;
-      }
+
       // Use B to Swap A
       let amountOfAJettonToSend: Int = (self.aAmount * 1000000000 / self.bAmount) * msg.amount / 1000000000;
       if (amountOfAJettonToSend > self.aAmount) {
@@ -125,15 +129,7 @@ contract Task3 with Deployable {
           value: 0,
           bounce: false,
           mode: 64,
-          body: TokenTransfer{
-            queryId: 0,
-            amount: msg.amount,
-            destination: msg.from,
-            responseDestination: myAddress(),
-            customPayload: null,
-            forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice()
-          }.toCell()
+          body: tra
         });
       } else {
         self.bAmount = self.bAmount + msg.amount;
