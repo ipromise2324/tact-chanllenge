@@ -75,7 +75,7 @@ contract Task4 with Deployable {
       });
     } else {
       self.nftAddress = context().sender;
-      self.lockTime = msg.forwardPayload;.loadUint(32) + now();
+      self.lockTime = msg.forwardPayload.loadUint(32) + now();
       self.nftOwner = msg.prevOwner;
     }
   }
