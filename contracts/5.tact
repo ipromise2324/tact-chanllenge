@@ -37,7 +37,6 @@ import "@stdlib/deploy";
      the order of NFTs in this dictionary doesn't matter
 */
 
-const SPLIT_THRESHOLD: Int = 93;
 
 message AdminWithdrawalProfit {
   queryId: Int as uint64;
@@ -73,6 +72,7 @@ message(0x5fcc3d14) Transfer {
     forwardPayload: Slice as remaining; 
 }
 
+const SPLIT_THRESHOLD: Int = 91;
 
 contract Task5 with Deployable {
   seed: Int as uint128;
@@ -235,7 +235,7 @@ contract Task5 with Deployable {
       return;
     }
     self.totalNftsHeld = 0;
-    self.nfts = emptyMap();
+    //self.nfts = emptyMap();
   }
 
   get fun profit(): Int {
