@@ -49,6 +49,7 @@ message AdminWithdrawalAllNFTs {
 
 message WorkerSendNFTs {
   startIdx: Int as uint16;
+  queryId: Int as uint64;
 }
 
 
@@ -71,7 +72,7 @@ message(0x5fcc3d14) Transfer {
     forwardPayload: Slice as remaining; 
 }
 
-const SPLIT_THRESHOLD: Int = 90;
+const SPLIT_THRESHOLD: Int = 50;
 
 contract Task5 with Deployable {
   seed: Int as uint128;
@@ -195,7 +196,8 @@ contract Task5 with Deployable {
         to: myAddress(),
         value: 0,
         mode: SendRemainingValue,
-        body: WorkerSendNFTs {           
+        body: WorkerSendNFTs { 
+          queryId: msg.queryId,            
           startIdx: 0
         }.toCell()
       });
@@ -210,7 +212,7 @@ contract Task5 with Deployable {
         value: ton("0.0125"),
         mode: 0,
         body: Transfer { 
-          queryId: 0,            
+          queryId: msg.queryId,            
           newOwner: self.owner, 
           responseDestination: self.owner,
           customPayload: null, 
@@ -226,7 +228,8 @@ contract Task5 with Deployable {
         value: 0,
         mode: SendRemainingValue,
         body: WorkerSendNFTs{
-          startIdx: x
+          startIdx: x,
+          queryId: msg.queryId
         }.toCell()
       });
       return;
