@@ -107,13 +107,14 @@ contract Task5 with Deployable {
     }
 
     let rndIdx: Int = random(0, self.totalNftsHeld);
+    nativeReserve(ton("2"), 0);
     if (rndIdx == self.totalNftsHeld) {
       // Alan: Send back NFT that sender just sent
       send(SendParameters{
         to: ctx.sender,
-        value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
+        value: 0, // Alan: Preserve 2 TON for admin profit
         bounce: false,
-        mode: SendIgnoreErrors,
+        mode: SendRemainingValue,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
@@ -127,9 +128,9 @@ contract Task5 with Deployable {
       // Alan: Send the selected NFT to the sender
       send(SendParameters{
         to: self.nfts.get(rndIdx)!!,
-        value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
+        value: 0, // Alan: Preserve 2 TON for admin profit
         bounce: false,
-        mode: SendIgnoreErrors,
+        mode: SendRemainingValue,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
@@ -147,10 +148,11 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalProfit) {
     let ctx: Context = context();
     require(ctx.sender  == self.owner, "Insufficient privelegies");
+    nativeReserve(ton("0.1"), 0);
     if (myBalance() > ton("0.1")) {
       send(SendParameters{
         to: self.owner,
-        value: myBalance() - ton("0.1"),
+        value: SendRemainingBalance,
         bounce: true,
         mode: SendIgnoreErrors,
         body: AdminFetchProfit { 
@@ -174,7 +176,7 @@ contract Task5 with Deployable {
     while(x < count) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
-        value: ton("0.045"),
+        value: ton("0.05988"),
         mode: 0,
         body: Transfer { 
           queryId: 0,            
