@@ -33,6 +33,7 @@ import "@stdlib/deploy";
 */
 
 
+
 message(0x7362d09c) TokenNotification {
     queryId: Int as uint64;
     amount: Int as coins;
@@ -76,7 +77,6 @@ contract Task3 with Deployable {
         return;
       }
       let amountOfBJettonToSend: Int = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
-      let emptySlice: Slice = emptySlice();
       if (amountOfBJettonToSend > self.bAmount) {
         send(SendParameters{
           to: self.jettonAddressA,
@@ -90,7 +90,7 @@ contract Task3 with Deployable {
             responseDestination: myAddress(),
             customPayload: null,
             forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice
+            forwardPayload: emptySlice()
           }.toCell()
         });
       } else {
@@ -108,7 +108,7 @@ contract Task3 with Deployable {
             responseDestination: myAddress(),
             customPayload: null,
             forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice
+            forwardPayload: emptySlice()
           }.toCell()
         });
       }
@@ -132,7 +132,7 @@ contract Task3 with Deployable {
             responseDestination: myAddress(),
             customPayload: null,
             forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice
+            forwardPayload: emptySlice()
           }.toCell()
         });
       } else {
@@ -150,7 +150,7 @@ contract Task3 with Deployable {
             responseDestination: myAddress(),
             customPayload: null,
             forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice
+            forwardPayload: emptySlice()
           }.toCell()
         });
       }

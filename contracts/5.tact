@@ -94,22 +94,21 @@ contract Task5 with Deployable {
       self.totalNftsHeld = self.totalNftsHeld + 1;
       return;
     }
-    let tra: Cell = Transfer { 
-          queryId: msg.queryId,            
-          newOwner: msg.prevOwner, 
-          responseDestination: msg.prevOwner, 
-          customPayload: null, 
-          forwardAmount: 0, 
-          forwardPayload: emptySlice() 
-        }.toCell();
 
     if(ctx.value < ton("2.1")) {
       // Send NFT back
       send(SendParameters{
         to: ctx.sender,
         value: 0,
-        mode: 64 + 32,
-        body: tra
+        mode: SendRemainingValue + SendIgnoreErrors,
+        body: Transfer { 
+          queryId: msg.queryId,            
+          newOwner: msg.prevOwner, 
+          responseDestination: msg.prevOwner, 
+          customPayload: null, 
+          forwardAmount: 0, 
+          forwardPayload: emptySlice() 
+        }.toCell()
       });
       return;
     }
@@ -122,8 +121,15 @@ contract Task5 with Deployable {
         to: ctx.sender,
         // value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
         value: 0,
-        mode: 64 + 32,
-        body: tra
+        mode: SendRemainingValue + SendIgnoreErrors,
+        body: Transfer { 
+          queryId: msg.queryId,            
+          newOwner: msg.prevOwner, 
+          responseDestination: msg.prevOwner, 
+          customPayload: null, 
+          forwardAmount: 0, 
+          forwardPayload: emptySlice() 
+        }.toCell()
       });
     } else {
       // Alan: Send the selected NFT to the sender
@@ -131,8 +137,15 @@ contract Task5 with Deployable {
         to: self.nfts.get(rndIdx)!!,
         // value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
         value: 0,
-        mode: 64 + 32,
-        body: tra
+        mode: SendRemainingValue + SendIgnoreErrors,
+        body: Transfer { 
+          queryId: msg.queryId,            
+          newOwner: msg.prevOwner, 
+          responseDestination: msg.prevOwner, 
+          customPayload: null, 
+          forwardAmount: 0, 
+          forwardPayload: emptySlice() 
+        }.toCell()
       });
       // Alan: Replace selected NFT with the one that sender just sent
       self.nfts.set(rndIdx, ctx.sender);
@@ -197,7 +210,7 @@ contract Task5 with Deployable {
     let bodyTransfer: Cell = Transfer { 
             queryId: msg.queryId,            
             newOwner: self.owner, 
-            responseDestination: newAddress(0, 0),
+            responseDestination: self.owner,
             customPayload: null, 
             forwardAmount: 0, 
             forwardPayload: emptySlice()
