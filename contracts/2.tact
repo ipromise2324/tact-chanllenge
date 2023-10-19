@@ -24,8 +24,9 @@ contract Task2 with Deployable {
     }
 
     receive(msg: Refund){
-        if (context().sender == self.admin) {
-            send(SendParameters{to: msg.sender, value: 0, bounce: true, mode: SendRemainingValue});
+        let owner: Address = self.admin;
+        if (context().sender == owner) {
+            send(SendParameters{to: owner, value: 0, bounce: true, mode: SendRemainingValue});
         } else {
             throw(0xffffff);
         }
