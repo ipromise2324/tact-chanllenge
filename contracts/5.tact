@@ -170,11 +170,9 @@ contract Task5 with Deployable {
 
   receive(msg: AdminWithdrawalAllNFTs) {
     let ctx: Context = context();
-
-    let on: Address = self.owner;
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.value >= ton("1") + self.totalNftsHeld * ton("0.08"), "Insufficent funds");
-    require(ctx.sender  == on, "Invalid sender");
+    require(ctx.sender  == self.owner, "Invalid sender");
     if (self.totalNftsHeld < SPLIT_THRESHOLD){
       let x: Int = 0;
       while(x < self.totalNftsHeld) {
@@ -184,8 +182,8 @@ contract Task5 with Deployable {
           mode: 0,
           body: Transfer { 
             queryId: msg.queryId,            
-            newOwner: on, 
-            responseDestination: on,
+            newOwner: self.owner, 
+            responseDestination: self.owner,
             customPayload: null, 
             forwardAmount: 0, 
             forwardPayload: emptySlice()
@@ -208,17 +206,15 @@ contract Task5 with Deployable {
 
   receive(msg: WorkerSendNFTs) {
     let x: Int = msg.startIdx;
-    let on: Address = self.owner;
-    let totalidx: Int = self.totalNftsHeld;
-    while(x < totalidx && x < msg.startIdx + SPLIT_THRESHOLD) {
+    while(x < self.totalNftsHeld && x < msg.startIdx + SPLIT_THRESHOLD) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.0125"),
         mode: 0,
         body: Transfer { 
           queryId: msg.queryId,            
-          newOwner: on, 
-          responseDestination: on,
+          newOwner: self.owner, 
+          responseDestination: self.owner,
           customPayload: null, 
           forwardAmount: 0, 
           forwardPayload: emptySlice()
@@ -226,7 +222,7 @@ contract Task5 with Deployable {
       });
       x = x + 1;
     }
-    if (x < totalidx) {
+    if (x < self.totalNftsHeld) {
       send(SendParameters{
         to: myAddress(),
         value: 0,
