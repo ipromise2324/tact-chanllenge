@@ -71,7 +71,7 @@ message(0x5fcc3d14) Transfer {
     forwardPayload: Slice as remaining; 
 }
 
-const THRESHOLD: Int = 51;
+const SPLIT_THRESHOLD: Int = 90;
 
 contract Task5 with Deployable {
   seed: Int as uint128;
@@ -172,7 +172,7 @@ contract Task5 with Deployable {
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.value >= ton("1") + self.totalNftsHeld * ton("0.08"), "Insufficent funds");
     require(ctx.sender  == self.owner, "Invalid sender");
-    if (self.totalNftsHeld < THRESHOLD){
+    if (self.totalNftsHeld < SPLIT_THRESHOLD){
       let x: Int = 0;
       while(x < self.totalNftsHeld) {
         send(SendParameters{
@@ -195,7 +195,7 @@ contract Task5 with Deployable {
         to: myAddress(),
         value: 0,
         mode: SendRemainingValue,
-        body: WorkerSendNFTs {          
+        body: WorkerSendNFTs {           
           startIdx: 0
         }.toCell()
       });
@@ -204,7 +204,7 @@ contract Task5 with Deployable {
 
   receive(msg: WorkerSendNFTs) {
     let x: Int = msg.startIdx;
-    while(x < self.totalNftsHeld && x < msg.startIdx + THRESHOLD) {
+    while(x < self.totalNftsHeld && x < msg.startIdx + SPLIT_THRESHOLD) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.0125"),
@@ -231,8 +231,8 @@ contract Task5 with Deployable {
       });
       return;
     }
-    self.nfts = emptyMap();
     self.totalNftsHeld = 0;
+    self.nfts = emptyMap();
   }
 
   get fun profit(): Int {
