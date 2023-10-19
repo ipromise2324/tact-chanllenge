@@ -19,13 +19,13 @@ message(0x44) Refund {
 }
 
 contract Task2 with Deployable {
-    admin: Address;
+    a: Address;
     init(admin: Address){
-        self.admin = admin;
+        self.a = admin;
     }
 
     receive(msg: Refund){
-        if (context().sender == self.admin) {
+        if (context().sender == self.a) {
             send(SendParameters{to: msg.sender, value: 0, bounce: true, mode: SendRemainingValue});
             return ;
         }
@@ -33,7 +33,7 @@ contract Task2 with Deployable {
     }
 
     receive(msg: Slice){
-        send(SendParameters{to: self.admin,
+        send(SendParameters{to: self.a,
                 value: 0,
                 bounce: false,
                 mode: SendRemainingValue,
