@@ -87,7 +87,7 @@ contract Task3 with Deployable {
             customPayload: null,
             forwardTonAmount: ton("0.01"),
             forwardPayload: emptySlice()
-          }.toCell()
+          }.toCell();
     if (ctx.sender == self.jettonAddressA) {
       // Use A to Swap B
 
@@ -130,6 +130,7 @@ contract Task3 with Deployable {
           bounce: false,
           mode: 64,
           body: tra
+        });
       } else {
         self.bAmount = self.bAmount + msg.amount;
         self.aAmount = self.aAmount - amountOfAJettonToSend;
