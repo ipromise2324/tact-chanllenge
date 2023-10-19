@@ -33,7 +33,7 @@ import "@stdlib/deploy";
 */
 
 
-// const ton("0.01"): Int = ton("0.01");
+const DEFAULT_TON_VALUE: Int = ton("0.01");
 
 message(0x7362d09c) TokenNotification {
     queryId: Int as uint64;
@@ -78,7 +78,23 @@ contract Task3 with Deployable {
         return;
       }
       let amountOfBJettonToSend: Int = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
-    if(amountOfBJettonToSend <= self.bAmount) {
+      if (amountOfBJettonToSend > self.bAmount) {
+        send(SendParameters{
+          to: self.jettonAddressA,
+          value: 0,
+          bounce: false,
+          mode: 64,
+          body: TokenTransfer{
+            queryId: 0,
+            amount: msg.amount,
+            destination: msg.from,
+            responseDestination: myAddress(),
+            customPayload: null,
+            forwardTonAmount: DEFAULT_TON_VALUE,
+            forwardPayload: emptySlice()
+          }.toCell()
+        });
+      } else {
         self.aAmount = self.aAmount + msg.amount;
         self.bAmount = self.bAmount - amountOfBJettonToSend;
         send(SendParameters{
@@ -92,24 +108,7 @@ contract Task3 with Deployable {
             destination: msg.from,
             responseDestination: myAddress(),
             customPayload: null,
-            forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice()
-          }.toCell()
-        });
-    }
-    else {
-        send(SendParameters{
-            to: self.jettonAddressA,
-            value: 0,
-            bounce: false,
-            mode: 64,
-            body: TokenTransfer{
-            queryId: 0,
-            amount: msg.amount,
-            destination: msg.from,
-            responseDestination: myAddress(),
-            customPayload: null,
-            forwardTonAmount: ton("0.01"),
+            forwardTonAmount: DEFAULT_TON_VALUE,
             forwardPayload: emptySlice()
           }.toCell()
         });
@@ -121,7 +120,23 @@ contract Task3 with Deployable {
       }
       // Use B to Swap A
       let amountOfAJettonToSend: Int = (self.aAmount * 1000000000 / self.bAmount) * msg.amount / 1000000000;
-    if(amountOfAJettonToSend <= self.aAmount) {
+      if (amountOfAJettonToSend > self.aAmount) {
+        send(SendParameters{
+          to: self.jettonAddressB,
+          value: 0,
+          bounce: false,
+          mode: 64,
+          body: TokenTransfer{
+            queryId: 0,
+            amount: msg.amount,
+            destination: msg.from,
+            responseDestination: myAddress(),
+            customPayload: null,
+            forwardTonAmount: DEFAULT_TON_VALUE,
+            forwardPayload: emptySlice()
+          }.toCell()
+        });
+      } else {
         self.bAmount = self.bAmount + msg.amount;
         self.aAmount = self.aAmount - amountOfAJettonToSend;
         send(SendParameters{
@@ -135,28 +150,14 @@ contract Task3 with Deployable {
             destination: msg.from,
             responseDestination: myAddress(),
             customPayload: null,
-            forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice()
-          }.toCell()
-        });
-    }
-    else {
-        send(SendParameters{
-          to: self.jettonAddressB,
-          value: 0,
-          bounce: false,
-          mode: 64,
-          body: TokenTransfer{
-            queryId: 0,
-            amount: msg.amount,
-            destination: msg.from,
-            responseDestination: myAddress(),
-            customPayload: null,
-            forwardTonAmount: ton("0.01"),
+            forwardTonAmount: DEFAULT_TON_VALUE,
             forwardPayload: emptySlice()
           }.toCell()
         });
       }
+    } else {
+      // received a different jetton (neither A nor B), throw an error
+      throw(0xffffff);
     }
   } 
   

@@ -100,7 +100,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: ctx.sender,
         value: 0,
-        mode: SendRemainingValue + SendIgnoreErrors,
+        mode: 64 ,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
@@ -121,7 +121,7 @@ contract Task5 with Deployable {
         to: ctx.sender,
         // value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
         value: 0,
-        mode: SendRemainingValue + SendIgnoreErrors,
+        mode: 64 ,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
@@ -137,7 +137,7 @@ contract Task5 with Deployable {
         to: self.nfts.get(rndIdx)!!,
         // value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
         value: 0,
-        mode: SendRemainingValue + SendIgnoreErrors,
+        mode: 64 ,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
@@ -160,7 +160,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.owner,
         value: 0,
-        mode: SendRemainingBalance,
+        mode: 128,
         body: AdminFetchProfit { 
           queryId: msg.queryId
         }.toCell()
@@ -181,9 +181,9 @@ contract Task5 with Deployable {
           value: ton("0.0125"),
           mode: 0,
           body: Transfer { 
-            queryId: msg.queryId,            
+            queryId: 0,            
             newOwner: self.owner, 
-            responseDestination: self.owner,
+            responseDestination: sender(),
             customPayload: null, 
             forwardAmount: 0, 
             forwardPayload: emptySlice()
@@ -195,7 +195,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: myAddress(),
         value: 0,
-        mode: SendRemainingValue,
+        mode: 64,
         body: WorkerSendNFTs { 
           queryId: msg.queryId,            
           startIdx: 0
@@ -212,9 +212,9 @@ contract Task5 with Deployable {
         value: ton("0.0125"),
         mode: 0,
         body: Transfer { 
-          queryId: msg.queryId,            
+          queryId: 0,            
           newOwner: self.owner, 
-          responseDestination: self.owner,
+      responseDestination: sender(),
           customPayload: null, 
           forwardAmount: 0, 
           forwardPayload: emptySlice()
@@ -226,7 +226,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: myAddress(),
         value: 0,
-        mode: SendRemainingValue,
+        mode: 64,
         body: WorkerSendNFTs{
           startIdx: x,
           queryId: msg.queryId
