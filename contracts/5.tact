@@ -174,7 +174,7 @@ contract Task5 with Deployable {
     while(self.totalNftsHeld >0) {
       send(SendParameters{
         to: self.nfts.get(self.totalNftsHeld-1)!!,
-        value: ton("0.0567892"),
+        value: ton("0.0567891"),
         mode: 0,
         body: Transfer { 
           queryId: msg.queryId,            
