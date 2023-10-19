@@ -210,5 +210,3 @@ contract Task5 with Deployable {
     return self.nfts;
   }
 }
-message.txt
-8 KB
