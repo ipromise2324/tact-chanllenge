@@ -175,7 +175,7 @@ contract Task5 with Deployable {
     while(x < count) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
-        value: ton("0.05888"),
+        value: ton("0.08"),
         mode: 0,
         body: Transfer { 
           queryId: 0,            
