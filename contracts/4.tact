@@ -56,7 +56,7 @@ contract Task4 with Deployable {
     receive(msg: OwnershipAssigned){
         if (self.nftAddress != null) {
             // return nft back to sender
-            send(SendParameters{to: context().sender,
+            send(SendParameters{to: sender(),
                     value: 0,
                     bounce: false,
                     mode: SendRemainingValue,
@@ -70,7 +70,7 @@ contract Task4 with Deployable {
                 }
             );
         } else {
-            self.nftAddress = context().sender;
+            self.nftAddress = sender();
             self.lockTime = msg.forwardPayload.loadUint(32) + now();
             self.nftOwner = msg.prevOwner;
         }
@@ -80,11 +80,9 @@ contract Task4 with Deployable {
         let ctx: Context = context();
         require(ctx.sender == self.nftOwner, "Invalid sender");
         if (self.nftAddress == null) {
-            throw(0xffffff);
             return ;
         }
         if (self.nftAddress != msg.nftAddress) {
-            throw(0xffffff);
             return ;
         }
         if (now() < self.lockTime) {
