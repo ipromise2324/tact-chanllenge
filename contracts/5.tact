@@ -51,6 +51,11 @@ message AdminFetchProfit {
   queryId: Int as uint64;
 }
 
+message WorkerSendNFTs {
+  queryId: Int as uint64;
+  startIdx: Int as uint16;
+}
+
 message TransferNFTToOwner {
   queryId: Int as uint64;
 }
@@ -169,27 +174,53 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalAllNFTs) {
     let ctx: Context = context();
     // 1 = 0.01 * 100 -> maybe forward ton amount
-    require(ctx.value >= (ton("1") + self.totalNftsHeld * ton("0.08")), "Insufficent funds");
+    require(ctx.value >= ton("1") + self.totalNftsHeld * ton("0.08"), "Insufficent funds");
     require(ctx.sender  == self.owner, "Invalid sender");
-    while(self.totalNftsHeld >0) {
+
+    send(SendParameters{
+      to: myAddress(),
+      value: 0,
+      mode: SendRemainingValue,
+      body: WorkerSendNFTs { 
+        queryId: msg.queryId,
+        startIdx: 0
+      }.toCell()
+    });
+  }
+
+  receive(msg: WorkerSendNFTs) {
+
+    let x: Int = msg.startIdx;
+    while(x < self.totalNftsHeld && x < msg.startIdx + 50) {
       send(SendParameters{
-        to: self.nfts.get(self.totalNftsHeld-1)!!,
+        to: self.nfts.get(x)!!,
         value: ton("0.0125"),
         mode: 0,
         body: Transfer { 
-          queryId: msg.queryId,            
+          queryId: msg.queryId,
           newOwner: self.owner, 
           responseDestination: self.owner,
           customPayload: null, 
           forwardAmount: 0, 
-          forwardPayload: emptySlice() 
+          forwardPayload: emptySlice()
         }.toCell()
       });
-      //self.nfts.get(self.totalNftsHeld-1)!!;
-      //self.nfts.set(self.totalNftsHeld-1, null);
-      self.totalNftsHeld = self.totalNftsHeld -1;
+      x = x + 1;
     }
-    self.nfts = emptyMap();
+    if (x < self.totalNftsHeld) {
+      send(SendParameters{
+        to: myAddress(),
+        value: 0,
+        mode: SendRemainingValue,
+        body: WorkerSendNFTs{
+          startIdx: x,
+          queryId: msg.queryId
+        }.toCell()
+      });
+    } else {
+      self.totalNftsHeld = 0;
+      self.nfts = emptyMap();
+    }
   }
 
   get fun profit(): Int {
