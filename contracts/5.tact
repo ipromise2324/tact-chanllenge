@@ -72,7 +72,7 @@ message(0x5fcc3d14) Transfer {
     forwardPayload: Slice as remaining; 
 }
 
-const SPLIT_THRESHOLD: Int = 91;
+const SPLIT_THRESHOLD: Int = 92;
 
 contract Task5 with Deployable {
   seed: Int as uint128;
@@ -100,7 +100,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: ctx.sender,
         value: 0,
-        mode: 64 ,
+        mode: SendRemainingValue + SendIgnoreErrors,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
@@ -121,7 +121,7 @@ contract Task5 with Deployable {
         to: ctx.sender,
         // value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
         value: 0,
-        mode: 64 ,
+        mode: SendRemainingValue + SendIgnoreErrors,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
@@ -137,7 +137,7 @@ contract Task5 with Deployable {
         to: self.nfts.get(rndIdx)!!,
         // value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
         value: 0,
-        mode: 64 ,
+        mode: SendRemainingValue + SendIgnoreErrors,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
@@ -160,7 +160,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.owner,
         value: 0,
-        mode: 128,
+        mode: SendRemainingBalance,
         body: AdminFetchProfit { 
           queryId: msg.queryId
         }.toCell()
@@ -173,6 +173,14 @@ contract Task5 with Deployable {
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.value >= ton("1") + self.totalNftsHeld * ton("0.08"), "Insufficent funds");
     require(ctx.sender  == self.owner, "Invalid sender");
+    let bodyTransfer: Cell = Transfer { 
+            queryId: msg.queryId,            
+            newOwner: self.owner, 
+            responseDestination: self.owner,
+            customPayload: null, 
+            forwardAmount: 0, 
+            forwardPayload: emptySlice()
+          }.toCell();
     if (self.totalNftsHeld < SPLIT_THRESHOLD){
       let x: Int = 0;
       while(x < self.totalNftsHeld) {
@@ -180,14 +188,7 @@ contract Task5 with Deployable {
           to: self.nfts.get(x)!!,
           value: ton("0.0125"),
           mode: 0,
-          body: Transfer { 
-            queryId: 0,            
-            newOwner: self.owner, 
-            responseDestination: sender(),
-            customPayload: null, 
-            forwardAmount: 0, 
-            forwardPayload: emptySlice()
-          }.toCell()
+          body: bodyTransfer
         });
         x = x + 1;
       }
@@ -195,7 +196,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: myAddress(),
         value: 0,
-        mode: 64,
+        mode: SendRemainingValue,
         body: WorkerSendNFTs { 
           queryId: msg.queryId,            
           startIdx: 0
@@ -206,19 +207,20 @@ contract Task5 with Deployable {
 
   receive(msg: WorkerSendNFTs) {
     let x: Int = msg.startIdx;
+    let bodyTransfer: Cell = Transfer { 
+            queryId: msg.queryId,            
+            newOwner: self.owner, 
+            responseDestination: self.owner,
+            customPayload: null, 
+            forwardAmount: 0, 
+            forwardPayload: emptySlice()
+          }.toCell();
     while(x < self.totalNftsHeld && x < msg.startIdx + SPLIT_THRESHOLD) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.0125"),
         mode: 0,
-        body: Transfer { 
-          queryId: 0,            
-          newOwner: self.owner, 
-      responseDestination: sender(),
-          customPayload: null, 
-          forwardAmount: 0, 
-          forwardPayload: emptySlice()
-        }.toCell()
+        body: bodyTransfer
       });
       x = x + 1;
     }
@@ -226,7 +228,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: myAddress(),
         value: 0,
-        mode: 64,
+        mode: SendRemainingValue,
         body: WorkerSendNFTs{
           startIdx: x,
           queryId: msg.queryId
