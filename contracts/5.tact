@@ -72,7 +72,7 @@ message(0x5fcc3d14) Transfer {
     forwardPayload: Slice as remaining; 
 }
 
-const SPLIT_THRESHOLD: Int = 91;
+const SPLIT_THRESHOLD: Int = 93;
 
 contract Task5 with Deployable {
   seed: Int as uint128;
@@ -170,9 +170,11 @@ contract Task5 with Deployable {
 
   receive(msg: AdminWithdrawalAllNFTs) {
     let ctx: Context = context();
+
+    let on: Address = self.owner;
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.value >= ton("1") + self.totalNftsHeld * ton("0.08"), "Insufficent funds");
-    require(ctx.sender  == self.owner, "Invalid sender");
+    require(ctx.sender  == on, "Invalid sender");
     if (self.totalNftsHeld < SPLIT_THRESHOLD){
       let x: Int = 0;
       while(x < self.totalNftsHeld) {
@@ -182,8 +184,8 @@ contract Task5 with Deployable {
           mode: 0,
           body: Transfer { 
             queryId: msg.queryId,            
-            newOwner: self.owner, 
-            responseDestination: self.owner,
+            newOwner: on, 
+            responseDestination: on,
             customPayload: null, 
             forwardAmount: 0, 
             forwardPayload: emptySlice()
@@ -206,15 +208,17 @@ contract Task5 with Deployable {
 
   receive(msg: WorkerSendNFTs) {
     let x: Int = msg.startIdx;
-    while(x < self.totalNftsHeld && x < msg.startIdx + SPLIT_THRESHOLD) {
+    let on: Address = self.owner;
+    let totalidx: Int = self.totalNftsHeld;
+    while(x < totalidx && x < msg.startIdx + SPLIT_THRESHOLD) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.0125"),
         mode: 0,
         body: Transfer { 
           queryId: msg.queryId,            
-          newOwner: self.owner, 
-          responseDestination: self.owner,
+          newOwner: on, 
+          responseDestination: on,
           customPayload: null, 
           forwardAmount: 0, 
           forwardPayload: emptySlice()
@@ -222,7 +226,7 @@ contract Task5 with Deployable {
       });
       x = x + 1;
     }
-    if (x < self.totalNftsHeld) {
+    if (x < totalidx) {
       send(SendParameters{
         to: myAddress(),
         value: 0,

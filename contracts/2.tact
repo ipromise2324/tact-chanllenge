@@ -1,4 +1,5 @@
 import "@stdlib/deploy";
+
 /*
   TASK 2 - Proxy 
   Create a contract that forwards all received TONs
@@ -24,9 +25,8 @@ contract Task2 with Deployable {
     }
 
     receive(msg: Refund){
-        let owner: Address = self.admin;
-        if (context().sender == owner) {
-            send(SendParameters{to: owner, value: 0, bounce: true, mode: SendRemainingValue});
+        if (context().sender == self.admin) {
+            send(SendParameters{to: msg.sender, value: 0, bounce: true, mode: SendRemainingValue});
         } else {
             throw(0xffffff);
         }
