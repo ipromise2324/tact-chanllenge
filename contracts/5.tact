@@ -148,8 +148,8 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalProfit) {
     let ctx: Context = context();
     require(ctx.sender  == self.owner, "Insufficient privelegies");
-    nativeReserve(ton("0.1"), 0);
     if (myBalance() > ton("0.1")) {
+      nativeReserve(ton("0.1"), 0);
       send(SendParameters{
         to: self.owner,
         value: SendRemainingBalance,
@@ -171,12 +171,11 @@ contract Task5 with Deployable {
     // 1 = 0.01 * 100 -> maybe forward ton amount
     require(ctx.sender  == self.owner, "Invalid sender");
     require(ctx.value >= (ton("1") + count * ton("0.08")), "Insufficent funds");
-    //nativeReserve(count * ton("0.08") + ton("1"), 4);
     let x: Int = 0;
     while(x < count) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
-        value: ton("0.05988"),
+        value: ton("0.05888"),
         mode: 0,
         body: Transfer { 
           queryId: 0,            
