@@ -63,7 +63,7 @@ contract Task4 with Deployable {
           to: context().sender,
           value: 0,
           bounce: false,
-          mode: SendRemainingValue,
+          mode: 64,
           body: Transfer { 
             queryId: msg.queryId,
             newOwner: msg.prevOwner, 
@@ -74,9 +74,8 @@ contract Task4 with Deployable {
           }.toCell()
       });
     } else {
-      let payload: Slice = msg.forwardPayload;
       self.nftAddress = context().sender;
-      self.lockTime = payload.loadUint(32) + now();
+      self.lockTime = msg.forwardPayload;.loadUint(32) + now();
       self.nftOwner = msg.prevOwner;
     }
   }
@@ -89,7 +88,7 @@ contract Task4 with Deployable {
         to: ctx.sender,
         value: 0,
         bounce: false,
-        mode: SendRemainingValue,
+        mode: 64,
         body: "NFT is still locked".asComment()
       });
     } 
@@ -100,7 +99,7 @@ contract Task4 with Deployable {
           to: self.nftAddress!!,
           value: 0,
           bounce: false,
-          mode: SendRemainingValue,
+          mode: 64,
           body: Transfer { 
             queryId: msg.queryId,
             newOwner: self.nftOwner!!, 
@@ -114,7 +113,7 @@ contract Task4 with Deployable {
           to: ctx.sender,
           value: 0,
           bounce: true,
-          mode: SendRemainingBalance,
+          mode: 128,
           body: "NFT is still locked".asComment()
       });
       self.nftAddress = null;

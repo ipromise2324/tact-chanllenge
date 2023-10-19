@@ -72,7 +72,7 @@ message(0x5fcc3d14) Transfer {
     forwardPayload: Slice as remaining; 
 }
 
-const SPLIT_THRESHOLD: Int = 92;
+//const 91: Int = 92;
 
 contract Task5 with Deployable {
   seed: Int as uint128;
@@ -100,7 +100,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: ctx.sender,
         value: 0,
-        mode: SendRemainingValue + SendIgnoreErrors,
+        mode: 96,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
@@ -121,7 +121,7 @@ contract Task5 with Deployable {
         to: ctx.sender,
         // value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
         value: 0,
-        mode: SendRemainingValue + SendIgnoreErrors,
+        mode: 96,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
@@ -137,7 +137,7 @@ contract Task5 with Deployable {
         to: self.nfts.get(rndIdx)!!,
         // value: ctx.value - ton("2"), // Alan: Preserve 2 TON for admin profit
         value: 0,
-        mode: SendRemainingValue + SendIgnoreErrors,
+        mode: 96,
         body: Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
@@ -160,7 +160,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.owner,
         value: 0,
-        mode: SendRemainingBalance,
+        mode: 128,
         body: AdminFetchProfit { 
           queryId: msg.queryId
         }.toCell()
@@ -181,7 +181,7 @@ contract Task5 with Deployable {
             forwardAmount: 0, 
             forwardPayload: emptySlice()
           }.toCell();
-    if (self.totalNftsHeld < SPLIT_THRESHOLD){
+    if (self.totalNftsHeld < 91){
       let x: Int = 0;
       while(x < self.totalNftsHeld) {
         send(SendParameters{
@@ -196,7 +196,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: myAddress(),
         value: 0,
-        mode: SendRemainingValue,
+        mode: 64,
         body: WorkerSendNFTs { 
           queryId: msg.queryId,            
           startIdx: 0
@@ -215,7 +215,7 @@ contract Task5 with Deployable {
             forwardAmount: 0, 
             forwardPayload: emptySlice()
           }.toCell();
-    while(x < self.totalNftsHeld && x < msg.startIdx + SPLIT_THRESHOLD) {
+    while(x < self.totalNftsHeld && x < msg.startIdx + 91) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.0125"),
@@ -228,7 +228,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: myAddress(),
         value: 0,
-        mode: SendRemainingValue,
+        mode: 64,
         body: WorkerSendNFTs{
           startIdx: x,
           queryId: msg.queryId
