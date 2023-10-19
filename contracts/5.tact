@@ -49,6 +49,7 @@ message AdminWithdrawalAllNFTs {
 
 message WorkerSendNFTs {
   startIdx: Int as uint16;
+  queryId: Int as uint64;
 }
 
 
@@ -195,7 +196,8 @@ contract Task5 with Deployable {
         to: myAddress(),
         value: 0,
         mode: SendRemainingValue,
-        body: WorkerSendNFTs {           
+        body: WorkerSendNFTs { 
+          queryId: msg.queryId,            
           startIdx: 0
         }.toCell()
       });
@@ -204,16 +206,15 @@ contract Task5 with Deployable {
 
   receive(msg: WorkerSendNFTs) {
     let x: Int = msg.startIdx;
-    let admin: Address = self.owner;
     while(x < self.totalNftsHeld && x < msg.startIdx + SPLIT_THRESHOLD) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.0125"),
         mode: 0,
         body: Transfer { 
-          queryId: 0,            
-          newOwner: admin, 
-          responseDestination: admin,
+          queryId: msg.queryId,            
+          newOwner: self.owner, 
+          responseDestination: self.owner,
           customPayload: null, 
           forwardAmount: 0, 
           forwardPayload: emptySlice()
@@ -227,7 +228,8 @@ contract Task5 with Deployable {
         value: 0,
         mode: SendRemainingValue,
         body: WorkerSendNFTs{
-          startIdx: x
+          startIdx: x,
+          queryId: msg.queryId
         }.toCell()
       });
       return;
