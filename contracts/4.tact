@@ -22,6 +22,10 @@ message NftWithdrawal {
   nftAddress: Address;
 }
 
+message(0xd53276db) Excesses {
+    query_id: Int as uint64;
+}
+
 contract Task4 with Deployable {
   seed: Int as uint128;
   lockTime: Int as uint32 = 0;
@@ -58,13 +62,12 @@ contract Task4 with Deployable {
   receive(msg: NftWithdrawal) {
     let sender: Address = sender();
     require(sender == self.nftOwner, "Invalid sender");
-    let comment: Cell = "NFT is still locked".asComment();
     if (now() < self.lockTime) {
       send(SendParameters{
         to: sender,
         value: 0,
         mode: 64,
-        body: comment
+        body: "NFT is still locked".asComment()
       });
       return;
     } 
@@ -88,7 +91,7 @@ contract Task4 with Deployable {
           value: 0,
           bounce: true,
           mode: 128,
-          body: comment
+          body: Excesses { query_id: msg.queryId }.toCell()
       });
       self.nftAddress = null;
       self.nftOwner = null;
