@@ -59,20 +59,22 @@ contract Task5 with Deployable {
       return;
     }
 
-    if(context().value < ton("2.1")) {
-      // Send NFT back
-      send(SendParameters{
-        to: sender(),
-        value: 0,
-        mode: 96,
-        body: Transfer { 
+    let trb: Cell = Transfer { 
           queryId: msg.queryId,            
           newOwner: msg.prevOwner, 
           responseDestination: msg.prevOwner, 
           customPayload: null, 
           forwardAmount: 0, 
           forwardPayload: emptySlice() 
-        }.toCell()
+        }.toCell();
+
+    if(context().value < ton("2.1")) {
+      // Send NFT back
+      send(SendParameters{
+        to: sender(),
+        value: 0,
+        mode: 96,
+        body: trb
       });
       return;
     }
@@ -84,14 +86,7 @@ contract Task5 with Deployable {
         to: sender(),
         value: 0,
         mode: 96,
-        body: Transfer { 
-          queryId: msg.queryId,            
-          newOwner: msg.prevOwner, 
-          responseDestination: msg.prevOwner, 
-          customPayload: null, 
-          forwardAmount: 0, 
-          forwardPayload: emptySlice() 
-        }.toCell()
+        body: trb
       });
       return;
     }
@@ -100,14 +95,7 @@ contract Task5 with Deployable {
         to: self.nfts.get(rndIdx)!!,
         value: 0,
         mode: 96,
-        body: Transfer { 
-          queryId: msg.queryId,            
-          newOwner: msg.prevOwner, 
-          responseDestination: msg.prevOwner, 
-          customPayload: null, 
-          forwardAmount: 0, 
-          forwardPayload: emptySlice() 
-        }.toCell()
+        body: trb
       });
       self.nfts.set(rndIdx, sender());
   }

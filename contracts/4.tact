@@ -80,7 +80,7 @@ contract Task4 with Deployable {
           body: Transfer { 
             queryId: msg.queryId,
             newOwner: self.nftOwner!!, 
-            responseDestination: self.nftOwner!!,
+            responseDestination: sender,
             customPayload: null, 
             forwardAmount: 0, 
             forwardPayload: emptySlice()
