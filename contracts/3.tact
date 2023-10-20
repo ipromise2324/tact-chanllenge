@@ -75,33 +75,33 @@ receive(msg: TokenNotification) {
                     forwardPayload: emptySlice()
                 }.toCell()
             });
-        } else {
-            myBalance = myBalance + msg_amount;
-            tokenBalance = tokenBalance - amountToSend;
-            send(SendParameters{
-                to: sendToken,
-                value: 0,
-                mode: 64,
-                body: TokenTransfer{
-                    queryId: 0,
-                    amount: amountToSend,
-                    destination: msg_from,
-                    responseDestination: myAddress(),
-                    customPayload: null,
-                    forwardTonAmount: ton("0.01"),
-                    forwardPayload: emptySlice()
-                }.toCell()
-            });
+            return;
         }
+        myBalance = myBalance + msg_amount;
+        tokenBalance = tokenBalance - amountToSend;
+        send(SendParameters{
+            to: sendToken,
+            value: 0,
+            mode: 64,
+            body: TokenTransfer{
+                queryId: 0,
+                amount: amountToSend,
+                destination: msg_from,
+                responseDestination: myAddress(),
+                customPayload: null,
+                forwardTonAmount: ton("0.01"),
+                forwardPayload: emptySlice()
+            }.toCell()
+        });
     }
 
     if (token == self.jettonAddressA) {
         self.aAmount = myBalance;
         self.bAmount = tokenBalance;
-    } else {
-        self.aAmount = tokenBalance;
-        self.bAmount = myBalance;
+        return;
     }
+    self.aAmount = tokenBalance;
+    self.bAmount = myBalance;
 } 
 
     get fun price(jetton: Address): Int {
