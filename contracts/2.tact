@@ -23,26 +23,17 @@ contract Task2 with Deployable {
     init(admin: Address){
         self.admin = admin;
     }
-
-    // Handler for receiving a Refund message
+    
     receive(msg: Refund){
-        // Check if the message is from the admin address
-        if (sender() == self.admin) {
-            // Forward all TONs attached to the Refund message back to the original sender
-            send(SendParameters{
+        require(sender() == self.admin, "Only Owner");
+        send(SendParameters{
                 to: msg.sender, 
                 value: 0, 
                 mode: SendRemainingValue
-            });
-        } else {
-            // Throw an exception if the message is not from the admin
-            throw(0xffffff);
-        }
+        });
     }
 
-    // Handler for receiving any other message (in this case, from a user)
     receive(msg: Slice){
-        // Forward the message and TONs to the admin contract
         send(SendParameters{
             to: self.admin,
             value: 0,
