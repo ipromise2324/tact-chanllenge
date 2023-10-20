@@ -22,10 +22,6 @@ message NftWithdrawal {
   nftAddress: Address;
 }
 
-message(0xd53276db) Excesses {
-    query_id: Int as uint64;
-}
-
 contract Task4 with Deployable {
   seed: Int as uint128;
   lockTime: Int as uint32 = 0;
@@ -42,6 +38,7 @@ contract Task4 with Deployable {
       send(SendParameters{
           to: sender(),
           value: 0,
+          bounce: false,
           mode: 64,
           body: Transfer { 
             queryId: msg.queryId,
@@ -62,12 +59,13 @@ contract Task4 with Deployable {
   receive(msg: NftWithdrawal) {
     let sender: Address = sender();
     require(sender == self.nftOwner, "Invalid sender");
+    let comment: Cell = "NFT is still locked".asComment();
     if (now() < self.lockTime) {
       send(SendParameters{
         to: sender,
         value: 0,
         mode: 64,
-        body: "NFT is still locked".asComment()
+        body: comment
       });
       return;
     } 
@@ -89,9 +87,8 @@ contract Task4 with Deployable {
       send(SendParameters{
           to: sender,
           value: 0,
-          bounce: true,
           mode: 128,
-          body: Excesses { query_id: msg.queryId }.toCell()
+          body: comment
       });
       self.nftAddress = null;
       self.nftOwner = null;
@@ -99,7 +96,7 @@ contract Task4 with Deployable {
   }
 
   get fun time(): Int {
-    if (self.lockTime == 0 || now() > self.lockTime) {
+    if (now() > self.lockTime) {
       return 0;
     }
     return self.lockTime - now();
