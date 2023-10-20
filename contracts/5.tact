@@ -127,7 +127,7 @@ contract Task5 with Deployable {
       forwardAmount: 0, 
       forwardPayload: emptySlice()
     }.toCell();
-    if (count < 91){
+    if (count < 94){
       let x: Int = 0;
       while(x < count) {
         send(SendParameters{
@@ -156,7 +156,7 @@ contract Task5 with Deployable {
     let x: Int = msg.startIdx;
     let bodyTransfer: Cell = msg.tn;
     let count: Int = self.totalNftsHeld;
-    while(x < count && x < msg.startIdx + 91) {
+    while(x < count && x < msg.startIdx + 94) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.01248"),
