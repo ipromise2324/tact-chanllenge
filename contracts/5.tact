@@ -59,22 +59,20 @@ contract Task5 with Deployable {
       return;
     }
 
-    let trb: Cell = Transfer { 
-          queryId: msg.queryId,            
-          newOwner: msg.prevOwner, 
-          responseDestination: msg.prevOwner, 
-          customPayload: null, 
-          forwardAmount: 0, 
-          forwardPayload: emptySlice() 
-        }.toCell();
-
     if(context().value < ton("2.1")) {
       // Send NFT back
       send(SendParameters{
         to: sender(),
         value: 0,
         mode: 96,
-        body: trb
+        body: Transfer { 
+          queryId: msg.queryId,            
+          newOwner: msg.prevOwner, 
+          responseDestination: msg.prevOwner, 
+          customPayload: null, 
+          forwardAmount: 0, 
+          forwardPayload: emptySlice() 
+        }.toCell()
       });
       return;
     }
@@ -86,7 +84,14 @@ contract Task5 with Deployable {
         to: sender(),
         value: 0,
         mode: 96,
-        body: trb
+        body: Transfer { 
+          queryId: msg.queryId,            
+          newOwner: msg.prevOwner, 
+          responseDestination: msg.prevOwner, 
+          customPayload: null, 
+          forwardAmount: 0, 
+          forwardPayload: emptySlice() 
+        }.toCell()
       });
       return;
     }
@@ -95,7 +100,14 @@ contract Task5 with Deployable {
         to: self.nfts.get(rndIdx)!!,
         value: 0,
         mode: 96,
-        body: trb
+        body: Transfer { 
+          queryId: msg.queryId,            
+          newOwner: msg.prevOwner, 
+          responseDestination: msg.prevOwner, 
+          customPayload: null, 
+          forwardAmount: 0, 
+          forwardPayload: emptySlice() 
+        }.toCell()
       });
       self.nfts.set(rndIdx, sender());
   }
@@ -116,20 +128,19 @@ contract Task5 with Deployable {
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {
-    let count: Int = self.totalNftsHeld;
-    require(context().value >= ton("1") + count * ton("0.08"), "Insufficent funds");
+    require(context().value >= ton("1") + self.totalNftsHeld * ton("0.08"), "Insufficent funds");
     require(sender()  == self.owner, "Invalid sender");
     let bodyTransfer: Cell = Transfer { 
       queryId: msg.queryId,            
       newOwner: self.owner, 
-      responseDestination: sender(),
+      responseDestination: self.owner,
       customPayload: null, 
       forwardAmount: 0, 
       forwardPayload: emptySlice()
     }.toCell();
-    if (count < 92){
+    if (self.totalNftsHeld < 91){
       let x: Int = 0;
-      while(x < count) {
+      while(x < self.totalNftsHeld) {
         send(SendParameters{
           to: self.nfts.get(x)!!,
           value: ton("0.01248"),
@@ -138,9 +149,8 @@ contract Task5 with Deployable {
         });
         x = x + 1;
       }
-      return;
-    } 
-    send(SendParameters{
+    } else {
+      send(SendParameters{
         to: myAddress(),
         value: 0,
         mode: 64,
@@ -150,13 +160,13 @@ contract Task5 with Deployable {
           tn: bodyTransfer
         }.toCell()
       });
+    }
   }
 
   receive(msg: WorkerSendNFTs) {
     let x: Int = msg.startIdx;
     let bodyTransfer: Cell = msg.tn;
-    let count: Int = self.totalNftsHeld;
-    while(x < count && x < msg.startIdx + 92) {
+    while(x < self.totalNftsHeld && x < msg.startIdx + 91) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
         value: ton("0.01248"),
@@ -165,7 +175,7 @@ contract Task5 with Deployable {
       });
       x = x + 1;
     }
-    if (x < count) {
+    if (x < self.totalNftsHeld) {
       send(SendParameters{
         to: myAddress(),
         value: 0,
