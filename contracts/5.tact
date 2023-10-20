@@ -37,30 +37,24 @@ message(0x5fcc3d14) Transfer {
     forwardPayload: Slice as remaining; 
 }
 
-//const 91: Int = 92;
-
 contract Task5 with Deployable {
-  //seed: Int as uint128;
   owner: Address;
   nfts: map<Int as uint16, Address>;
   totalNftsHeld: Int as uint16 = 0;
   
   init(seed: Int, owner: Address) {
     self.owner = owner;
-    //self.seed = seed;
   }
 
 
   receive(msg: OwnershipAssigned) {
     if(msg.prevOwner == self.owner) {
-      // Add NFT to collection
       self.nfts.set(self.totalNftsHeld, sender());
       self.totalNftsHeld = self.totalNftsHeld + 1;
       return;
     }
 
     if(context().value < ton("2.1")) {
-      // Send NFT back
       send(SendParameters{
         to: sender(),
         value: 0,
@@ -95,7 +89,6 @@ contract Task5 with Deployable {
       });
       return;
     }
-    // Alan: Send the selected NFT to the sender
       send(SendParameters{
         to: self.nfts.get(rndIdx)!!,
         value: 0,

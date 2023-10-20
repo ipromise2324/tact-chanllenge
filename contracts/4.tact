@@ -24,18 +24,15 @@ message NftWithdrawal {
 
 
 contract Task4 with Deployable {
-  //seed: Int as uint128;
   lockTime: Int as uint32 = 0;
   nftAddress: Address? = null;
   nftOwner: Address? = null;
   
   init(seed: Int) {
-    //self.seed = seed;
   }
 
   receive(msg: OwnershipAssigned) {
     if(self.nftAddress != null) {
-      // return nft back to sender
       send(SendParameters{
           to: sender(),
           value: 0,
@@ -70,8 +67,6 @@ contract Task4 with Deployable {
       });
       return;
     } 
-    // let balance: Int = myBalance();
-      // balance = balance - ton("0.05");
       send(SendParameters{
           to: self.nftAddress!!,
           value: 0,
@@ -94,13 +89,12 @@ contract Task4 with Deployable {
       });
       self.nftAddress = null;
       self.nftOwner = null;
-      //self.lockTime = 0;
   }
 
   get fun time(): Int {
-    if (now() > self.lockTime) {
-      return 0;
-    }
+    // if (now() > self.lockTime) {
+    //   return 0;
+    // }
     return self.lockTime - now();
   }
 
