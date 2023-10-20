@@ -143,14 +143,15 @@ contract Task5 with Deployable {
       while(x < self.totalNftsHeld) {
         send(SendParameters{
           to: self.nfts.get(x)!!,
-          value: ton("0.01248"),
+          value: ton("0.012475"),
           mode: 0,
           body: bodyTransfer
         });
         x = x + 1;
       }
-    } else {
-      send(SendParameters{
+      return;
+    }
+    send(SendParameters{
         to: myAddress(),
         value: 0,
         mode: 64,
@@ -159,8 +160,7 @@ contract Task5 with Deployable {
           startIdx: 0,
           tn: bodyTransfer
         }.toCell()
-      });
-    }
+    });
   }
 
   receive(msg: WorkerSendNFTs) {
@@ -169,7 +169,7 @@ contract Task5 with Deployable {
     while(x < self.totalNftsHeld && x < msg.startIdx + 91) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
-        value: ton("0.01248"),
+        value: ton("0.012475"),
         mode: 0,
         body: bodyTransfer
       });
