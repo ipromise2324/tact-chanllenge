@@ -77,6 +77,7 @@ contract Task3 with Deployable {
           forwardPayload: emptySlice()
         }.toCell()
       });
+      return;
     }else if (ctx_sender == self.jettonAddressA) {
       if (msg_from == self.owner) {
         self.aAmount = self.aAmount + msg_amount;
@@ -116,7 +117,9 @@ contract Task3 with Deployable {
           forwardPayload: emptySlice()
         }.toCell()
       });
+      return;
     }
+    throw(0xffffff);
   } 
   
   get fun price(jetton: Address): Int {
