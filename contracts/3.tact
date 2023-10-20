@@ -38,12 +38,14 @@ contract Task3 with Deployable {
     let ctx_sender: Address = sender();
     let msg_from: Address = msg.from;
     let msg_amount: Int = msg.amount;
+    let b: Int = self.bAmount;
+    let a: Int = self.aAmount;
     if (ctx_sender == self.jettonAddressB) { 
       if (msg_from == self.owner) {
-        self.bAmount = self.bAmount + msg_amount;
+        self.bAmount = b + msg_amount;
         return;
       }
-      let aAmountToSend: Int = (self.aAmount * 1000000000 / self.bAmount) * msg_amount / 1000000000;
+      let aAmountToSend: Int = (a * 1000000000 / b) * msg_amount / 1000000000;
       if (aAmountToSend > self.aAmount) {
         send(SendParameters{
           to: self.jettonAddressB,
@@ -61,8 +63,8 @@ contract Task3 with Deployable {
         });
         return;
       } 
-      self.bAmount = self.bAmount + msg_amount;
-      self.aAmount = self.aAmount - aAmountToSend;
+      self.bAmount = b + msg_amount;
+      self.aAmount = a - aAmountToSend;
       send(SendParameters{
         to: self.jettonAddressA,
         value: 0,
@@ -80,11 +82,11 @@ contract Task3 with Deployable {
       return;
     }else if (ctx_sender == self.jettonAddressA) {
       if (msg_from == self.owner) {
-        self.aAmount = self.aAmount + msg_amount;
+        self.aAmount = a + msg_amount;
         return;
       }
-      let bAmountToSend: Int = (self.bAmount * 1000000000 / self.aAmount) * msg_amount / 1000000000;
-      if (bAmountToSend > self.bAmount) {
+      let bAmountToSend: Int = (b * 1000000000 / a) * msg_amount / 1000000000;
+      if (bAmountToSend > b) {
         send(SendParameters{
           to: self.jettonAddressA,
           value: 0,
@@ -101,8 +103,8 @@ contract Task3 with Deployable {
         });
         return;
       }
-      self.aAmount = self.aAmount + msg_amount;
-      self.bAmount = self.bAmount - bAmountToSend;
+      self.aAmount = a + msg_amount;
+      self.bAmount = b - bAmountToSend;
       send(SendParameters{
         to: self.jettonAddressB,
         value: 0,
