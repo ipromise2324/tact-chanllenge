@@ -167,8 +167,8 @@ contract Task5 with Deployable {
   receive(msg: WorkerSendNFTs) {
     let x: Int = msg.startIdx;
     let bodyTransfer: Cell = msg.tn;
-    let count = self.totalNftsHeld;
-    let end = msg.startIdx + 91;
+    let count: Int = self.totalNftsHeld;
+    let end: Int = msg.startIdx + 91;
     while(x < count && x < end) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
