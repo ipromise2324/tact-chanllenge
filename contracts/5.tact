@@ -40,7 +40,7 @@ message(0x5fcc3d14) Transfer {
 //const 91: Int = 92;
 
 contract Task5 with Deployable {
-  seed: Int as uint128;
+  //seed: Int as uint128;
   owner: Address;
   nfts: map<Int as uint16, Address>;
   totalNftsHeld: Int as uint16 = 0;
