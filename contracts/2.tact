@@ -12,11 +12,11 @@ contract Task2 with Deployable {
     }
 
     receive(msg: Refund){
-        require(sender() == self.admin, "Owner");
+        require(sender() == self.admin, "o");
         send(SendParameters{
                 to: msg.sender, 
                 value: 0, 
-                mode: SendRemainingValue
+                mode: 64
         });
     }
 
@@ -24,7 +24,7 @@ contract Task2 with Deployable {
         send(SendParameters{
             to: self.admin,
             value: 0,
-            mode: SendRemainingValue,
+            mode: 64,
             body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
         });
     }
