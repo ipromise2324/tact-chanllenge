@@ -49,7 +49,7 @@ receive(msg: TokenNotification) {
         tokenBalance = self.aAmount;
         sendToken = self.jettonAddressA;
     } else {
-        throw(0xffffff);
+        return;
     }
     
     let msg_from: Address = msg.from;
