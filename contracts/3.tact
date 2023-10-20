@@ -60,7 +60,7 @@ receive(msg: TokenNotification) {
     }
     else {
         let amountToSend: Int = (tokenBalance * 1000000000 / myBalance) * msg_amount / 1000000000;
-        if (amountToSend > myBalance) {
+        if (amountToSend > tokenBalance) {
             send(SendParameters{
                 to: token,
                 value: 0,
