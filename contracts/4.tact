@@ -30,7 +30,7 @@ contract Task4 with Deployable {
   nftOwner: Address? = null;
   
   init(seed: Int) {
-    self.seed = seed;
+    //self.seed = seed;
   }
 
   receive(msg: OwnershipAssigned) {

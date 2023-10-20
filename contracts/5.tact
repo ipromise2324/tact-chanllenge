@@ -1,7 +1,7 @@
 import "@stdlib/deploy";
 
 
-const thesheld: Int = 89;
+const thesheld: Int = 91;
 message AdminWithdrawalProfit {
   queryId: Int as uint64;
 }
@@ -47,7 +47,7 @@ contract Task5 with Deployable {
   
   init(seed: Int, owner: Address) {
     self.owner = owner;
-    self.seed = seed;
+    //self.seed = seed;
   }
 
 
