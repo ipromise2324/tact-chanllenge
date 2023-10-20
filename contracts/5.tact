@@ -149,8 +149,9 @@ contract Task5 with Deployable {
         });
         x = x + 1;
       }
-    } else {
-      send(SendParameters{
+      return;
+    }
+    send(SendParameters{
         to: myAddress(),
         value: 0,
         mode: 64,
@@ -160,7 +161,6 @@ contract Task5 with Deployable {
           tn: bodyTransfer
         }.toCell()
       });
-    }
   }
 
   receive(msg: WorkerSendNFTs) {
