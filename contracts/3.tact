@@ -115,6 +115,7 @@ contract Task3 with Deployable {
         return;
     }
     throw(0xffffff);
+    return;
   } 
   
   get fun price(jetton: Address): Int {
