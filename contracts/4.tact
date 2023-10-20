@@ -38,7 +38,6 @@ contract Task4 with Deployable {
       send(SendParameters{
           to: sender(),
           value: 0,
-          bounce: false,
           mode: 64,
           body: Transfer { 
             queryId: msg.queryId,
@@ -64,7 +63,6 @@ contract Task4 with Deployable {
       send(SendParameters{
         to: sender,
         value: 0,
-        bounce: false,
         mode: 64,
         body: comment
       });
@@ -75,7 +73,6 @@ contract Task4 with Deployable {
       send(SendParameters{
           to: self.nftAddress!!,
           value: 0,
-          bounce: false,
           mode: 64,
           body: Transfer { 
             queryId: msg.queryId,
@@ -94,7 +91,7 @@ contract Task4 with Deployable {
           body: comment
       });
       self.nftAddress = null;
-      //self.nftOwner = null;
+      self.nftOwner = null;
       //self.lockTime = 0;
   }
 
