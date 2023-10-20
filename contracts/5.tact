@@ -1,7 +1,7 @@
 import "@stdlib/deploy";
 
 
-const thesheld: Int = 91;
+const thesheld: Int = 89;
 message AdminWithdrawalProfit {
   queryId: Int as uint64;
 }

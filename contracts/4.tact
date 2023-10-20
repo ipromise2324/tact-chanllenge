@@ -2,7 +2,6 @@ import "@stdlib/deploy";
 
 
 
-const comment: Cell = "NFT is still locked".asComment();
 message(0x05138d91) OwnershipAssigned {
     queryId: Int as uint64;
     prevOwner: Address;
@@ -22,6 +21,7 @@ message NftWithdrawal {
   queryId: Int as uint64;
   nftAddress: Address;
 }
+
 
 contract Task4 with Deployable {
   seed: Int as uint128;
@@ -60,6 +60,7 @@ contract Task4 with Deployable {
   receive(msg: NftWithdrawal) {
     let sender: Address = sender();
     require(sender == self.nftOwner, "Invalid sender");
+    let comment: Cell = "NFT is still locked".asComment();
     if (now() < self.lockTime) {
       send(SendParameters{
         to: sender,
