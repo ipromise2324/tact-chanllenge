@@ -24,21 +24,30 @@ contract Task2 with Deployable {
         self.admin = admin;
     }
 
+    // Handler for receiving a Refund message
     receive(msg: Refund){
+        // Check if the message is from the admin address
         if (sender() == self.admin) {
-            send(SendParameters{to: msg.sender, value: 0, mode: SendRemainingValue});
+            // Forward all TONs attached to the Refund message back to the original sender
+            send(SendParameters{
+                to: msg.sender, 
+                value: 0, 
+                mode: SendRemainingValue
+            });
         } else {
+            // Throw an exception if the message is not from the admin
             throw(0xffffff);
         }
     }
 
+    // Handler for receiving any other message (in this case, from a user)
     receive(msg: Slice){
-        send(SendParameters{to: self.admin,
-                value: 0,
-                bounce: false,
-                mode: SendRemainingValue,
-                body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
-            }
-        );
+        // Forward the message and TONs to the admin contract
+        send(SendParameters{
+            to: self.admin,
+            value: 0,
+            mode: SendRemainingValue,
+            body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
+        });
     }
 }
