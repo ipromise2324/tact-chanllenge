@@ -1,7 +1,7 @@
 import "@stdlib/deploy";
 
 
-
+const thesheld: Int = 91;
 message AdminWithdrawalProfit {
   queryId: Int as uint64;
 }
@@ -139,7 +139,7 @@ contract Task5 with Deployable {
       forwardAmount: 0, 
       forwardPayload: emptySlice()
     }.toCell();
-    if (count < 91){
+    if (count < thesheld){
       let x: Int = 0;
       while(x < count) {
         send(SendParameters{
@@ -168,7 +168,7 @@ contract Task5 with Deployable {
     let x: Int = msg.startIdx;
     let bodyTransfer: Cell = msg.tn;
     let count: Int = self.totalNftsHeld;
-    let end: Int = msg.startIdx + 91;
+    let end: Int = msg.startIdx + thesheld;
     while(x < count && x < end) {
       send(SendParameters{
         to: self.nfts.get(x)!!,
